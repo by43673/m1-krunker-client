@@ -1,12 +1,9 @@
-		app.commandLine.appendSwitch("disable-frame-rate-limit");
-		app.commandLine.appendSwitch("disable-pixel-canvas-recording");
+
+                app.commandLine.appendSwitch("disable-frame-rate-limit");
 		app.commandLine.appendSwitch("enable-gpu-rasterization");
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
+		app.commandLine.appendSwitch('disable-features', 'CompositingOptimizations');
 		app.commandLine.appendSwitch("disable-oop-rasterization");
-		app.commandLine.appendSwitch('disable-2d-canvas-clip-aa');
 		app.commandLine.appendSwitch("disable-zero-copy");
-		app.commandLine.appendSwitch('disable-features', 'CanvasOopRasterization');
-		app.commandLine.appendSwitch('disable-features', 'ForcePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-print-preview');
 		app.commandLine.appendSwitch('disable-metrics-repo');
@@ -29,3 +26,4 @@
 		app.commandLine.appendSwitch('enable-highres-timer');
 		app.commandLine.appendSwitch("disable-gpu-vsync");
 		app.commandLine.appendSwitch('no-proxy-server');
+         
