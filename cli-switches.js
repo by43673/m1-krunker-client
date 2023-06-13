@@ -1,5 +1,5 @@
 		app.commandLine.appendSwitch("disable-frame-rate-limit");
-		app.commandLine.appendSwitch('disable-layout-ng');
+		app.commandLine.appendSwitch('disable-blink-features', 'FragmentItem');
 		app.commandLine.appendSwitch('disable-features', 'CompositingOptimizations');
 		app.commandLine.appendSwitch("disable-gpu-rasterization");
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
