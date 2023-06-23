@@ -1,5 +1,6 @@
 		app.commandLine.appendSwitch("disable-frame-rate-limit");
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');	
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-features', 'CompositingOptimizations');
 		app.commandLine.appendSwitch("disable-gpu-rasterization");
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
