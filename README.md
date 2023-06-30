@@ -1,5 +1,5 @@
 # m1-krunker-client
-adding flags to fix hitreg on idkr and crankshaft client. All I did was add some flags. Everything else is idkr or LaF.
+adding flags to fix hitreg on idkr and crankshaft client. All I did was add some flags. Everything else is idkr or crankshaft.
 
 You will need to use third party software to keybind shooting to fix aim freeze. No flags atm to fix aim freeze.
 
