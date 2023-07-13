@@ -19,13 +19,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
-		app.commandLine.appendSwitch('enable-javascript-harmony');
-		app.commandLine.appendSwitch('enable-future-v8-vm-features');
-		app.commandLine.appendSwitch('enable-webgl'); // might be useless since this is default but ensure
-		app.commandLine.appendSwitch('enable-webgl2-compute-context');
-		app.commandLine.appendSwitch('disable-background-timer-throttling');
-		app.commandLine.appendSwitch('disable-renderer-backgrounding');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+		app.commandLine.appendSwitch('disable-oop-rasterization');
 
 
 		console.log('Applied helpful flags');
@@ -67,7 +61,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');			console.log('Removed FPS Cap');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
+console.log('Removed FPS Cap');
 	}
 
 	if (userPrefs['angle-backend'] !== 'default') {
