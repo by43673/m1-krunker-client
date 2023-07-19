@@ -1,5 +1,4 @@
 # This is a krunker client modified for native m1 mac arm. Everything is crankshaft copy except flags I added to fix hireg issues. To download, go to releases and then install the dmg from the google drive link. 
-# I recommend enabling helpful flags for gud hitreg. Everything else is ur own preference. 
 # Feel free to look at switches.ts for the flags I used. 
 # FYI: Electron version I used: electron-nightly@12.0.0-nightly.20201116. 
 # One issue right now is that the csgo custom game in krunker doesn't seem to work. This seems like a chromium bug(specifically chromium 88) where if I use disable-blink-features=LayoutNGFragmentItem, there is a "Oh Snap!" issue. 
