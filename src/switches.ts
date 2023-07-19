@@ -9,6 +9,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-print-preview');
 		app.commandLine.appendSwitch('disable-metrics-repo');
 		app.commandLine.appendSwitch('disable-metrics');
+		app.commandLine.appendSwitch('disable-2d-canvas-clip-aa');
 		app.commandLine.appendSwitch('disable-bundled-ppapi-flash');
 		app.commandLine.appendSwitch('disable-logging');
 		app.commandLine.appendSwitch('disable-hang-monitor');
@@ -19,7 +20,15 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
-		app.commandLine.appendSwitch('disable-oop-rasterization');
+		app.commandLine.appendSwitch('enable-javascript-harmony');
+		app.commandLine.appendSwitch('enable-future-v8-vm-features');
+		app.commandLine.appendSwitch('enable-webgl'); // might be useless since this is default but ensure
+		app.commandLine.appendSwitch('enable-webgl2-compute-context');
+		app.commandLine.appendSwitch('disable-background-timer-throttling');
+		app.commandLine.appendSwitch('disable-renderer-backgrounding');
+
+		// Don't require user gesture for autoplay (thanks Commander)
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 
 		console.log('Applied helpful flags');
@@ -28,14 +37,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('renderer-process-limit', '100');
 		app.commandLine.appendSwitch('max-active-webgl-contexts', '100');
 		app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100');
+		app.commandLine.appendSwitch('ignore-gpu-blacklist');
 
 		console.log('Applied flags to increase limits');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('enable-highres-timer');
-		app.commandLine.appendSwitch('enable-quic');
+		app.commandLine.appendSwitch('enable-highres-timer'); // supposedly lowers latency
+		app.commandLine.appendSwitch('enable-quic'); // enables an experimental low-latency protocol
 		app.commandLine.appendSwitch('enable-accelerated-2d-canvas');
-		app.commandLine.appendSwitch('disable-gpu-vsync');
 
 		console.log('Applied latency-reducing flags');
 	}
@@ -45,24 +54,30 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-accelerated-video-decode');
 		app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
 		app.commandLine.appendSwitch('high-dpi-support', '1');
-		app.commandLine.appendSwitch('ignore-gpu-blocklist');
+		app.commandLine.appendSwitch('ignore-gpu-blacklist');
 		app.commandLine.appendSwitch('no-pings');
 		app.commandLine.appendSwitch('no-proxy-server');
+
+		// disable-canvas-aa
 
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
+		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
 		console.log('GPU rasterization active');
 	}
 
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
+		app.commandLine.appendSwitch('disable-gpu-vsync');
+		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
-console.log('Removed FPS Cap');
+		app.commandLine.appendSwitch('disable-oop-rasterization');
+		console.log('Removed FPS Cap');
 	}
 
 	if (userPrefs['angle-backend'] !== 'default') {
