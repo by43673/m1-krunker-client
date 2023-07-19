@@ -76,7 +76,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
-		app.commandLine.appendSwitch('disable-oop-rasterization');
 		console.log('Removed FPS Cap');
 	}
 
