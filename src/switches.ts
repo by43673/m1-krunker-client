@@ -50,13 +50,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.experimentalFlags_experimental) {
 		// do they crash the game? not for me. do they actually help? ¯\_(ツ)_/¯
-		app.commandLine.appendSwitch('disable-low-end-device-mode');
-		app.commandLine.appendSwitch('enable-accelerated-video-decode');
-		app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
-		app.commandLine.appendSwitch('high-dpi-support', '1');
-		app.commandLine.appendSwitch('ignore-gpu-blacklist');
-		app.commandLine.appendSwitch('no-pings');
-		app.commandLine.appendSwitch('no-proxy-server');
+		app.commandLine.appendSwitch('disable-oop-rasterization');
 
 		// disable-canvas-aa
 
@@ -75,11 +69,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('enable-viz-display-compositor');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('use-cmd-decoder', 'validating');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
-		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('disable-oop-rasterization');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		console.log('Removed FPS Cap');
 	}
 
