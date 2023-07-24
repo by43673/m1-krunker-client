@@ -6,7 +6,7 @@
 Use third party software such as usb overdrive to keybind to fix aim freeze. No flags atm to fix this(impossible to fix with flags)
 Here is an example on how to do it: bind left click to m5 and bind m5 to left click. In krunker, set shoot to m5(which is actually u left clicking but krunker thinks it is m5)
 
-# idkr for m1!!!
+# LaF client for m1!!!
 
 # if u get this app is damaged error: open terminal -> type this in: xattr -cr /Applications/Appname.app
 ex: if idkr-> xattr -cr /Applications/idkr.app
