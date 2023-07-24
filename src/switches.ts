@@ -62,11 +62,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
-		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		console.log('Removed FPS Cap');
+		app.commandLine.appendSwitch('disable-features', 'PaintHolding');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 	}
 
 	if (userPrefs['angle-backend'] !== 'default') {
