@@ -42,22 +42,17 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied flags to increase limits');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('enable-highres-timer'); // supposedly lowers latency
-		app.commandLine.appendSwitch('enable-quic'); // enables an experimental low-latency protocol
+		app.commandLine.appendSwitch('enable-highres-timer');
+		app.commandLine.appendSwitch('enable-quic');
 		app.commandLine.appendSwitch('enable-accelerated-2d-canvas');
 
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		// do they crash the game? not for me. do they actually help? ¯\_(ツ)_/¯
 		app.commandLine.appendSwitch('disable-oop-rasterization');
-
-		// disable-canvas-aa
-
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
-		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
 		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
@@ -67,7 +62,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
-		app.commandLine.appendSwitch('enable-viz-display-compositor');
+		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
