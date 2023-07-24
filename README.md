@@ -11,6 +11,6 @@ Here is an example on how to do it: bind left click to m5 and bind m5 to left cl
 # LaF client for m1!!!
 
 # if u get this app is damaged error: open terminal -> type this in: xattr -cr /Applications/Appname.app
-ex: if idkr-> xattr -cr /Applications/idkr.app
+ex: if LaF-> xattr -cr /Applications/LaF.app
 if crankshaft: if idkr-> xattr -cr /Applications/crankshaft.app
 
