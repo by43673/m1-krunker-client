@@ -76,6 +76,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-features', 'PaintHolding');
+		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM86');
+		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM85');
 		app.commandLine.appendSwitch('use-cmd-decoder', 'validating');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		console.log('Removed FPS Cap');
