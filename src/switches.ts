@@ -27,9 +27,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
-		// Don't require user gesture for autoplay (thanks Commander)
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-
 
 		console.log('Applied helpful flags');
 	}
@@ -53,7 +50,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-low-end-device-mode');
 		app.commandLine.appendSwitch('enable-accelerated-video-decode');
 		app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
-		app.commandLine.appendSwitch('high-dpi-support', '1');
 		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		app.commandLine.appendSwitch('no-pings');
 		app.commandLine.appendSwitch('no-proxy-server');
@@ -65,17 +61,13 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
-		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
 		console.log('GPU rasterization active');
 	}
 
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
-		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM86');
-		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM85');
-		app.commandLine.appendSwitch('enable-quic');
-		app.commandLine.appendSwitch('ignore-gpu-blocklist');
+		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
