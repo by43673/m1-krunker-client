@@ -22,7 +22,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_helpfulFlags) {
 		app.commandLine.appendSwitch('enable-javascript-harmony');
 		app.commandLine.appendSwitch('enable-future-v8-vm-features');
-		app.commandLine.appendSwitch('enable-webgl'); // might be useless since this is default but ensure
 		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
@@ -61,6 +60,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
+		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
 		console.log('GPU rasterization active');
 	}
@@ -68,7 +68,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		console.log('Removed FPS Cap');
