@@ -25,6 +25,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 
 		console.log('Applied helpful flags');
