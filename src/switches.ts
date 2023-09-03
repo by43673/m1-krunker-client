@@ -30,6 +30,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 		console.log('Applied helpful flags');
 	}
+	if (userPrefs.experimentalFlags_lowLatency) {
+		
+	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
 		app.commandLine.appendSwitch('renderer-process-limit', '100');
 		app.commandLine.appendSwitch('max-active-webgl-contexts', '100');
@@ -38,19 +41,11 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 		console.log('Applied flags to increase limits');
 	}
-	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('enable-highres-timer'); // supposedly lowers latency
-		app.commandLine.appendSwitch('enable-quic'); // enables an experimental low-latency protocol
-		app.commandLine.appendSwitch('enable-accelerated-2d-canvas');
-
-		console.log('Applied latency-reducing flags');
-	}
 	if (userPrefs.experimentalFlags_experimental) {
 		// do they crash the game? not for me. do they actually help? ¯\_(ツ)_/¯
 		app.commandLine.appendSwitch('disable-low-end-device-mode');
 		app.commandLine.appendSwitch('enable-accelerated-video-decode');
 		app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
-		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		app.commandLine.appendSwitch('no-pings');
 		app.commandLine.appendSwitch('no-proxy-server');
 
@@ -68,7 +63,11 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
+		app.commandLine.appendSwitch('enable-quic');
+		app.commandLine.appendSwitch('high-dpi-support',1);
+		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		console.log('Removed FPS Cap');
