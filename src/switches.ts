@@ -31,6 +31,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied helpful flags');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
+		app.commandLine.appendSwitch('disable-gpu-vsync');
 		
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
@@ -42,16 +43,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied flags to increase limits');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		// do they crash the game? not for me. do they actually help? ¯\_(ツ)_/¯
-		app.commandLine.appendSwitch('disable-low-end-device-mode');
-		app.commandLine.appendSwitch('enable-accelerated-video-decode');
-		app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
-		app.commandLine.appendSwitch('no-pings');
-		app.commandLine.appendSwitch('no-proxy-server');
+		app.commandLine.appendSwitch('enable-quic');
+		app.commandLine.appendSwitch('high-dpi-support',1);
+		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 
-		// disable-canvas-aa
-
-		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
@@ -63,9 +58,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
-		app.commandLine.appendSwitch('enable-quic');
-		app.commandLine.appendSwitch('high-dpi-support',1);
-		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
