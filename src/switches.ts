@@ -32,7 +32,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
-		
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
 		app.commandLine.appendSwitch('renderer-process-limit', '100');
@@ -60,6 +59,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'EditingNG');
 		console.log('Removed FPS Cap');
 	}
