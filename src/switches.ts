@@ -59,9 +59,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
+		app.commandLine.appendSwitch('disable-blink-features', 'EditingNG');
 		console.log('Removed FPS Cap');
 	}
 
