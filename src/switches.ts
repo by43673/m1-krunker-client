@@ -14,9 +14,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-logging');
 		app.commandLine.appendSwitch('disable-hang-monitor');
 		app.commandLine.appendSwitch('disable-component-update');
-
-		if (process.platform === 'darwin') app.commandLine.appendSwitch('disable-dev-shm-usage');
-
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
@@ -26,9 +23,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-
-
-		console.log('Applied helpful flags');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
@@ -58,9 +52,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('enable-blink-features', 'LayoutNGPaintFragment');
-		app.commandLine.appendSwitch('disable-blink-features', 'EditingNG');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		console.log('Removed FPS Cap');
 	}
 
