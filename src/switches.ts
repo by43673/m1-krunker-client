@@ -52,9 +52,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('enable-blink-features', 'LayoutNGPaintFragments');
-		console.log('Removed FPS Cap');
+		app.commandLine.appendSwitch('enable-blink-features', 'PaintHolding');
 	}
 
 	if (userPrefs['angle-backend'] !== 'default') {
