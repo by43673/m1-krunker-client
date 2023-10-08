@@ -19,7 +19,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_helpfulFlags) {
 		app.commandLine.appendSwitch('enable-javascript-harmony');
 		app.commandLine.appendSwitch('enable-future-v8-vm-features');
-		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
@@ -53,6 +52,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
+		app.commandLine.appendSwitch('enable-blink-features', 'LayoutNGPaintFragments');
 		console.log('Removed FPS Cap');
 	}
 
