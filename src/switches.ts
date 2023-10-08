@@ -52,6 +52,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('enable-blink-features', 'PaintHolding');
 	}
 
