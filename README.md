@@ -1,13 +1,15 @@
 # This is a krunker client modified for native m1 mac arm. Everything is crankshaft copy except flags I added to fix hireg issues. To download, go to releases and then install the dmg from the google drive link. 
 # Important!!!!
-Currently, there is an issue with the electron version I am using. Feel free to check my LaF mac client for alternatives. If you want to use crankshaft and experiment, try replacing electron with npm remove electron && npm install electron@12.0.0-beta.24 and change the flags to app.commandLine.appendSwitch('disable-features', 'FragmentItem'); 
+Currently, there is an issue with the electron version I am using. Feel free to check my LaF mac client for alternatives. If you want to use crankshaft and experiment, try replacing electron with npm remove electron && npm install electron@12.0.0-beta.24 and change the flags to 
+
+app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+app.commandLine.appendSwitch('disable-features', 'FragmentItem'); 
 app.commandLine.appendSwitch('disable-features', 'LayoutNGFieldset'); 
 app.commandLine.appendSwitch('disable-features', 'EditingNG'); 
 app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG'); 
 
 instead of these: 
 
-app.commandLine.appendSwitch('disable-frame-rate-limit');
 app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 app.commandLine.appendSwitch('disable-features', 'LayoutNGFieldset');
 app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
