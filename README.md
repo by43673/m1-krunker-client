@@ -18,7 +18,7 @@ app.commandLine.appendSwitch('disable-blink-features', 'EditingNG');
  Feel free to look at switches.ts for the flags I used. 
  FYI: Electron version I used(for crankshaft) initially: electron-nightly@12.0.0-nightly.20201116. 
 
-It is a good electron version if one can fix the black screen issue. Currently, I fixed it by blocking all ads in crankshaft settings but to do that one needs to install x64 version of crankshaft in the original crankshaft page, then turn on the block all ad filters settings from an old version of crankshaft(prob like 3 or 2 versions before the most recent one as of oct 15th 2023) and then build the crankshaft app for m1 and replace the x64 version.(this will save the crankshaft setting and thus make the client actually work).
+It is a good electron version if one can fix the black screen issue. Currently, I fixed it by blocking all ads in crankshaft settings but to do that one needs to install x64 version of crankshaft in the original crankshaft page, then turn on the block all ad settings from an old version of crankshaft(prob like 3 or 2 versions before the most recent one as of oct 15th 2023) and then build the crankshaft app for m1 and replace the x64 version.(this will save the crankshaft setting and thus make the client actually work).
 
 # Important(Yes, again)
 Use third party software such as usb overdrive or logitech ghub to keybind to fix aim freeze. No flags atm to fix this(impossible to fix with flags)
