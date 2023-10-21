@@ -24,7 +24,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('disable-gpu-vsync');
+		app.commandLine.appendSwitch('enable-highres-timer');
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
 		app.commandLine.appendSwitch('renderer-process-limit', '100');
@@ -36,7 +36,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('enable-quic');
-		app.commandLine.appendSwitch('high-dpi-support',1);
+		app.commandLine.appendSwitch('high-dpi-support', '1');
 		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 
 	}
@@ -50,6 +50,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
+		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
