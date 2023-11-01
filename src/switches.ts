@@ -14,14 +14,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-logging');
 		app.commandLine.appendSwitch('disable-hang-monitor');
 		app.commandLine.appendSwitch('disable-component-update');
-		console.log('Removed useless features');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 	}
+
 	if (userPrefs.safeFlags_helpfulFlags) {
 		app.commandLine.appendSwitch('enable-javascript-harmony');
 		app.commandLine.appendSwitch('enable-future-v8-vm-features');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
@@ -41,7 +41,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
-		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
 		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
@@ -52,24 +51,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('use-cmd-decode', 'passthrough');
+		app.commandLine.appendSwitch('use-angle', 'metal');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
 		app.commandLine.appendSwitch('disable-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'EditingNG');
 	}
 
-	if (userPrefs['angle-backend'] !== 'default') {
-		if (userPrefs['angle-backend'] === 'vulkan') {
-			app.commandLine.appendSwitch('use-angle', 'vulkan');
-			app.commandLine.appendSwitch('use-vulkan');
-			app.commandLine.appendSwitch('--enable-features=Vulkan');
-
-			console.log('VULKAN INITIALIZED');
-		} else {
-			app.commandLine.appendSwitch('use-angle', userPrefs['angle-backend'] as string);
-
-			console.log(`Using Angle: ${userPrefs['angle-backend']}`);
-		}
-	}
 	if (userPrefs.inProcessGPU) {
 		app.commandLine.appendSwitch('in-process-gpu');
 		console.log('In Process GPU is active');
