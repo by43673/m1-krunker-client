@@ -14,14 +14,19 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-logging');
 		app.commandLine.appendSwitch('disable-hang-monitor');
 		app.commandLine.appendSwitch('disable-component-update');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-	}
 
+		if (process.platform === 'darwin') app.commandLine.appendSwitch('disable-dev-shm-usage');
+	}
 	if (userPrefs.safeFlags_helpfulFlags) {
 		app.commandLine.appendSwitch('enable-javascript-harmony');
 		app.commandLine.appendSwitch('enable-future-v8-vm-features');
+		app.commandLine.appendSwitch('enable-webgl'); // might be useless since this is default but ensure
+		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
+
+		// Don't require user gesture for autoplay (thanks Commander)
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
