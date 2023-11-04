@@ -51,12 +51,16 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('use-cmd-decode', 'passthrough');
-		app.commandLine.appendSwitch('use-angle', 'metal');
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
-		app.commandLine.appendSwitch('disable-features', 'LayoutNGFieldset');
+		app.commandLine.appendSwitch('disable-features', 'ForcePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('disable-blink-features', 'EditingNG');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGForControls');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGLayoutOverflow');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutShiftAttribution');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGRuby');
 	}
 
 	if (userPrefs.inProcessGPU) {
