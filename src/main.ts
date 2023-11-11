@@ -14,8 +14,6 @@ const filtersPath = pathJoin(docsPath, 'Crankshaft/filters.txt');
 const userscriptsPath = pathJoin(docsPath, 'Crankshaft/scripts');
 const userscriptTrackerPath = pathJoin(userscriptsPath, 'tracker.json');
 
-app.userAgentFallback = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Electron/10.4.7 Safari/537.36';
-
 const settingsSkeleton = {
 	fpsUncap: true,
 	inProcessGPU: false,
@@ -50,6 +48,7 @@ const settingsSkeleton = {
 	regionTimezones: false
 };
 
+
 if (!existsSync(swapperPath)) mkdirSync(swapperPath, { recursive: true });
 if (!existsSync(userscriptsPath)) mkdirSync(userscriptsPath, { recursive: true });
 if (!existsSync(userscriptTrackerPath)) writeFileSync(userscriptTrackerPath, '{}', { encoding: 'utf-8' });
@@ -83,8 +82,6 @@ if (typeof userPrefs.hideAds === 'boolean') {
 	modifiedSettings = true;
 	if (userPrefs.hideAds === true) userPrefs.hideAds = 'hide'; else userPrefs.hideAds = 'off';
 }
-
-// write the new settings format to the settings.json file right after the conversion
 if (modifiedSettings) writeFileSync(settingsPath, JSON.stringify(userPrefs, null, 2), { encoding: 'utf-8' });
 
 let mainWindow: BrowserWindow;
@@ -92,33 +89,27 @@ let socialWindowReference: BrowserWindow;
 
 ipcMain.on('logMainConsole', (event, data) => { console.log(data); });
 
-// send usercript path to preload
+
 ipcMain.on('initializeUserscripts', () => {
 	mainWindow.webContents.send('main_initializes_userscripts', userscriptsPath, __dirname);
 });
-
-// initial request of settings to populate the settingsUI
 ipcMain.on('settingsUI_requests_userPrefs', () => {
 	mainWindow.webContents.send('m_userPrefs_for_settingsUI', settingsPath, userPrefs);
 });
 
-// preload requests the latest settings to feed into matchmaker. IPC is probably faster than an I/O read? not that it really matters.
 ipcMain.on('matchmaker_requests_userPrefs', () => {
 	mainWindow.webContents.send('matchmakerRedirect', userPrefs);
 });
 
-// settingsui is sending back updated settings (user changed the settings in ui) - writing new settings is already handles
 ipcMain.on('settingsUI_updates_userPrefs', (event, data) => {
 	Object.assign(userPrefs, data);
 });
 
-// allow perload opening links in default browser
 ipcMain.on('openExternal', (event, url: string) => { shell.openExternal(url); });
 
 const $assets = pathResolve(__dirname, '..', 'assets');
 const hideAdsCSS = readFileSync(pathJoin($assets, 'hideAds.css'), { encoding: 'utf-8' });
 
-/** open a custom generic window with our menu, hidden */
 function customGenericWin(url: string, providedMenuTemplate: (MenuItemConstructorOptions | MenuItem)[], addAdditionalSubmenus = true) {
 	const genericWin = new BrowserWindow({
 		autoHideMenuBar: true,
@@ -133,8 +124,7 @@ function customGenericWin(url: string, providedMenuTemplate: (MenuItemConstructo
 		} as Electron.WebPreferences
 	});
 
-	// add additional submenus to the generic win
-	const injectablePosition = process.platform === 'darwin' ? 1 : 0; // the position where we should inject our submenus
+	const injectablePosition = process.platform === 'darwin' ? 1 : 0; 
 	const { submenu } = providedMenuTemplate[injectablePosition];
 
 	if (addAdditionalSubmenus && Array.isArray(submenu)) {
@@ -167,7 +157,6 @@ function customGenericWin(url: string, providedMenuTemplate: (MenuItemConstructo
 	genericWin.setMenuBarVisibility(false);
 	genericWin.loadURL(url);
 
-	// if hideAds is enabled, hide them. then show the window
 	genericWin.once('ready-to-show', () => {
 		if (userPrefs.hideAds === 'hide' || userPrefs.hideAds === 'block') genericWin.webContents.insertCSS(hideAdsCSS);
 		genericWin.show();
@@ -181,7 +170,6 @@ function customGenericWin(url: string, providedMenuTemplate: (MenuItemConstructo
 	return genericWin;
 }
 
-// apply settings and flags
 applyCommandLineSwitches(userPrefs);
 
 if (userPrefs.resourceSwapper) {
@@ -195,7 +183,6 @@ if (userPrefs.resourceSwapper) {
 	} ]);
 }
 
-// Listen for app to get ready
 app.on('ready', () => {
 	app.setAppUserModelId(process.execPath);
 
@@ -215,7 +202,6 @@ app.on('ready', () => {
 		backgroundColor: '#000000'
 	};
 
-	// userPrefs.fullscreen = maximized gets handled later
 	switch (userPrefs.fullscreen) {
 		case 'fullscreen':
 			mainWindowProps.fullscreen = true;
@@ -243,7 +229,6 @@ app.on('ready', () => {
 	mainWindow = new BrowserWindow(mainWindowProps);
 	if (userPrefs.fullscreen === 'borderless') mainWindow.moveTop();
 
-	// general ready to show, runs when window refreshes or loads url
 	mainWindow.on('ready-to-show', () => {
 		if (userPrefs.fullscreen === 'maximized' && !mainWindow.isMaximized()) mainWindow.maximize();
 		if (!mainWindow.isVisible()) mainWindow.show();
@@ -315,11 +300,10 @@ app.on('ready', () => {
 
 			rpc.login({ clientId }).catch(console.error); // login to the RPC
 			mainWindow.webContents.send('initDiscordRPC'); // tell preload to init rpc
-			ipcMain.on('preload_updates_DiscordRPC', (event, data: RPCargs) => { updateRPC(data); }); // whenever preload updates rpc, actually update it here
+			ipcMain.on('preload_updates_DiscordRPC', (event, data: RPCargs) => { updateRPC(data); });
 		}
 	});
 
-	// only runs on client start
 	mainWindow.once('ready-to-show', () => {
 		mainWindow.webContents.send('checkForUpdates', app.getVersion());
 		mainWindow.webContents.on('did-finish-load', () => mainWindow.webContents.send('main_did-finish-load', userPrefs));
@@ -366,9 +350,8 @@ app.on('ready', () => {
 
 	if (process.platform !== 'darwin') csMenuTemplate.push({ label: 'About', submenu: aboutSubmenu });
 
-	// the other submenus are defined in menu.ts
 	const csMenu = Menu.buildFromTemplate([...macAppMenuArr, gameSubmenu, ...csMenuTemplate]);
-	const strippedMenuTemplate = [...macAppMenuArr, genericMainSubmenu, ...csMenuTemplate]; // don't forget to inject devtools in this
+	const strippedMenuTemplate = [...macAppMenuArr, genericMainSubmenu, ...csMenuTemplate];
 
 	Menu.setApplicationMenu(csMenu);
 
@@ -394,18 +377,18 @@ app.on('ready', () => {
 				buttons: ['Open in default browser', 'Open as a new window in client', 'Open in this window', "Don't open"]
 			});
 			switch (pick) {
-				case 0: // open in default browser
+				case 0: 
 					event.preventDefault();
 					shell.openExternal(url);
 					break;
-				case 2: // load as main window
+				case 2:
 					event.preventDefault();
 					mainWindow.loadURL(url);
 					break;
-				case 3: // don't open
+				case 3: 
 					event.preventDefault();
 					break;
-				case 1: // open as a new window in client
+				case 1: 
 				default: {
 					event.preventDefault();
 					const genericWin = customGenericWin(url, strippedMenuTemplate);
@@ -414,7 +397,6 @@ app.on('ready', () => {
 				}
 			}
 
-			// for comp or hosted game just load it into the mainWindow
 		} else if (url.includes('comp.krunker.io')
 			|| url.startsWith('https://krunker.io/?game')
 			|| url.startsWith('https://krunker.io/?play')
@@ -422,19 +404,18 @@ app.on('ready', () => {
 		) {
 			event.preventDefault();
 			mainWindow.loadURL(url);
-		} else { // for any other link, fall back to creating a custom window with strippedMenu. 
+		} else { 
 			event.preventDefault();
 			console.log(`genericWindow created for ${url}`, socialWindowReference);
 			const genericWin = customGenericWin(url, strippedMenuTemplate);
 			event.newGuest = genericWin;
 
-			// if the window is social, create and assign a new socialWindow
 			if (url.includes('https://krunker.io/social.html')) {
 				socialWindowReference = genericWin;
 				// eslint-disable-next-line no-void
-				genericWin.on('close', () => { socialWindowReference = void 0; }); // remove reference once window is closed
+				genericWin.on('close', () => { socialWindowReference = void 0; });
 
-				genericWin.webContents.on('will-navigate', (evt, willnavUrl) => { // new social pages will just replace the url in this one window
+				genericWin.webContents.on('will-navigate', (evt, willnavUrl) => { 
 					if (willnavUrl.includes('https://krunker.io/social.html')) {
 						genericWin.loadURL(willnavUrl);
 					} else {
@@ -452,8 +433,7 @@ app.on('ready', () => {
 	}
 });
 
-// for the 2nd attempt at fixing the memory leak, i am just going to rely on standard electron lifecycle logic - when all windows close, the app should exit itself
 // eslint-disable-next-line consistent-return
 app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') return app.quit(); // don't quit on mac systems unless user explicitly quits
+	if (process.platform !== 'darwin') return app.quit();
 });
