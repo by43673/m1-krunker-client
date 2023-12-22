@@ -24,8 +24,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
-		app.commandLine.appendSwitch('enable-javascript-harmony');
-		app.commandLine.appendSwitch('enable-future-v8-vm-features');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
@@ -39,13 +37,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('enable-highres-timer');
+		app.commandLine.appendSwitch('enable-high-resolution-time');
 		app.commandLine.appendSwitch('enable-quic');
 		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		app.commandLine.appendSwitch('high-dpi-support', '1');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		
+		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
+		app.commandLine.appendSwitch('disable-features', 'BlinkCompositorUseDisplayThreadPriority');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
@@ -61,7 +60,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-features', 'AlignFontDisplayAutoTimeoutWithLCPGoal');
 		app.commandLine.appendSwitch('disable-features', 'CompositeCrossOriginIframes');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('NumOfFramesToToggleInterval', '60');
+		app.commandLine.appendSwitch('disable-features', 'FlexAspectRatio');
 	}
 
 	if (userPrefs['angle-backend'] !== 'default') {
