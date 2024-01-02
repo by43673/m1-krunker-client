@@ -48,14 +48,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGForControls');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGLayoutOverflow');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
-		app.commandLine.appendSwitch('disable-features', 'CompositeCrossOriginIframes');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('disable-blink-features', 'TableCellNewPercents');
-		app.commandLine.appendSwitch('disable-blink-features', 'ParentNodeReplaceChildren');	
-		app.commandLine.appendSwitch('disable-blink-features', 'CSSReducedFontLoadingLayoutInvalidations');
-		app.commandLine.appendSwitch('disable-features', 'FontPreloadingDelaysRendering');
-		app.commandLine.appendSwitch('disable-features', 'AlignFontDisplayAutoTimeoutWithLCPGoal');
-		app.commandLine.appendSwitch('disable-features', 'FlexAspectRatio');
 
 	}
 
