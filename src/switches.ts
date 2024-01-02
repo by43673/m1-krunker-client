@@ -7,29 +7,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_removeUselessFeatures) {
 		app.commandLine.appendSwitch('disable-breakpad');
 		app.commandLine.appendSwitch('disable-print-preview');
-		app.commandLine.appendSwitch('disable-metrics-repo');
-		app.commandLine.appendSwitch('disable-metrics');
 		app.commandLine.appendSwitch('disable-2d-canvas-clip-aa');
-		app.commandLine.appendSwitch('disable-bundled-ppapi-flash');
 		app.commandLine.appendSwitch('disable-logging');
 		app.commandLine.appendSwitch('disable-hang-monitor');
 		app.commandLine.appendSwitch('disable-component-update');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGForControls');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGLayoutOverflow');
-		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
-		app.commandLine.appendSwitch('disable-blink-features', 'TableCellNewPercents');
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');
-		app.commandLine.appendSwitch('disable-blink-features', 'ParentNodeReplaceChildren');	
-		app.commandLine.appendSwitch('disable-blink-features', 'CSSReducedFontLoadingLayoutInvalidations');		
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
 		app.commandLine.appendSwitch('renderer-process-limit', '100');
@@ -37,30 +22,41 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('enable-high-resolution-time');
+		app.commandLine.appendSwitch('enable-highres-timer');
 		app.commandLine.appendSwitch('enable-quic');
 		app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		app.commandLine.appendSwitch('high-dpi-support', '1');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
-		app.commandLine.appendSwitch('disable-features', 'BlinkCompositorUseDisplayThreadPriority');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
 		app.commandLine.appendSwitch('enable-oop-rasterization');
-		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM86');
 		app.commandLine.appendSwitch('disable-zero-copy');
 	}
 
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
-		app.commandLine.appendSwitch('disable-features', 'FontPreloadingDelaysRendering');
-		app.commandLine.appendSwitch('disable-features', 'AlignFontDisplayAutoTimeoutWithLCPGoal');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');	
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');	
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGForControls');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGLayoutOverflow');
+		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
 		app.commandLine.appendSwitch('disable-features', 'CompositeCrossOriginIframes');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('disable-blink-features', 'TableCellNewPercents');
+		app.commandLine.appendSwitch('disable-blink-features', 'ParentNodeReplaceChildren');	
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSReducedFontLoadingLayoutInvalidations');
+		app.commandLine.appendSwitch('disable-features', 'FontPreloadingDelaysRendering');
+		app.commandLine.appendSwitch('disable-features', 'AlignFontDisplayAutoTimeoutWithLCPGoal');
 		app.commandLine.appendSwitch('disable-features', 'FlexAspectRatio');
+
 	}
 
 	if (userPrefs['angle-backend'] !== 'default') {
