@@ -41,8 +41,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');	
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
-		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');	
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGForControls');
@@ -50,9 +48,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-features', 'CompressParkableStrings');
-		app.commandLine.appendSwitch('disable-features', 'TargetBlankImpliesNoOpener');
 		app.commandLine.appendSwitch('disable-features', 'ParkableStringsToDisk');
-		app.commandLine.appendSwitch('disable-features', 'CompositeCrossOriginIframes');
 		app.commandLine.appendSwitch('enable-features', 'MaxOverlapBoundsForFixed');
 
 	}
