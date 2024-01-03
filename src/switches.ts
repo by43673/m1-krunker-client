@@ -49,6 +49,11 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGLayoutOverflow');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('disable-features', 'CompressParkableStrings');
+		app.commandLine.appendSwitch('disable-features', 'TargetBlankImpliesNoOpener');
+		app.commandLine.appendSwitch('disable-features', 'ParkableStringsToDisk');
+		app.commandLine.appendSwitch('disable-features', 'CompositeCrossOriginIframes');
+		app.commandLine.appendSwitch('enable-features', 'MaxOverlapBoundsForFixed');
 
 	}
 
