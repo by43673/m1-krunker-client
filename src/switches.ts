@@ -18,7 +18,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
-		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
+		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
