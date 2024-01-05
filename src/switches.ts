@@ -41,15 +41,34 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');	
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeSVG');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFragmentItem');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGFieldset');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGForControls');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGLayoutOverflow');
 		app.commandLine.appendSwitch('disable-blink-features', 'LayoutNGWebkitBox');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('disable-features', 'ParentNodeReplaceChildren');
+		app.commandLine.appendSwitch('disable-features', 'enable-pixel-canvas-recording');	
+		app.commandLine.appendSwitch('disable-features', 'FontPreloadingDelaysRendering');	
+		app.commandLine.appendSwitch('disable-features', 'AlignFontDisplayAutoTimeoutWithLCPGoal');
+		app.commandLine.appendSwitch('disable-features', 'DecodeJpeg420ImagesToYUV');	
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSFocusVisible');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSFontMetricsOverride');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSMarkerPseudoElement');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSOMViewScrollCoordinates');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSAspectRatioProperty');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSKeyframesMemoryReduction');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSPseudoIs');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSPseudoWhere');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSReducedFontLoadingLayoutInvalidations');
+		app.commandLine.appendSwitch('disable-blink-features', 'CSSReducedFontLoadingInvalidations');
+		app.commandLine.appendSwitch('disable-features', 'VaapiVP9Encoder');
+		app.commandLine.appendSwitch('disable-features', 'MediaCapabilitiesQueryGpuFactories');	
 		app.commandLine.appendSwitch('disable-features', 'CompressParkableStrings');
 		app.commandLine.appendSwitch('disable-features', 'ParkableStringsToDisk');
-		app.commandLine.appendSwitch('enable-features', 'MaxOverlapBoundsForFixed');
+		app.commandLine.appendSwitch('disable-features', 'CompositeCrossOriginIframes');
 
 	}
 
