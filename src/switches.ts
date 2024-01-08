@@ -18,14 +18,19 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-background-timer-throttling',
             'disable-renderer-backgrounding'
         ],
-        experimentalFlags_increaseLimits: ['enable-features=DefaultPassthroughCommandDecoder'],
+        experimentalFlags_increaseLimits: [
+	     'enable-pointer-lock-options'
+	],
         experimentalFlags_lowLatency: [
             'enable-highres-timer',
             'enable-quic',
-            'ignore-gpu-blocklist',
-            'high-dpi-support=1'
+            'ignore-gpu-blocklist'
         ],
-        experimentalFlags_experimental: ['enable-features=BlinkCompositorUseDisplayThreadPriority'],
+        experimentalFlags_experimental: [
+	    'enable-features=BlinkCompositorUseDisplayThreadPriority',
+	    'use-direct-composition',
+            'enable-features=DefaultPassthroughCommandDecoder'
+	],
         safeFlags_gpuRasterizing: [
             'enable-gpu-rasterization',
             'enable-oop-rasterization',
@@ -45,8 +50,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-blink-features=TableCellNewPercents',
             'disable-features=UsePreferredIntervalForVideo',
             'disable-features=ParentNodeReplaceChildren',
-            'disable-features=H264DecoderBufferIsCompleteFrame',
-            'disable-features=enable-pixel-canvas-recording',
             'disable-features=FontPreloadingDelaysRendering',
             'disable-features=AlignFontDisplayAutoTimeoutWithLCPGoal',
             'disable-features=DecodeJpeg420ImagesToYUV',
