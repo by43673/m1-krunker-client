@@ -19,7 +19,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-renderer-backgrounding'
         ],
         experimentalFlags_increaseLimits: [
-	     'enable-pointer-lock-options'
+	     'renderer-process-limit',
+	     'max-active-webgl-contexts=100',
+	     'webrtc-max-cpu-consumption-percentage=100'
 	],
         experimentalFlags_lowLatency: [
             'enable-highres-timer',
@@ -27,8 +29,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'ignore-gpu-blocklist'
         ],
         experimentalFlags_experimental: [
-	    'enable-features=BlinkCompositorUseDisplayThreadPriority',
-	    'use-direct-composition',
+	    'use-gl=angle',
             'enable-features=DefaultPassthroughCommandDecoder'
 	],
         safeFlags_gpuRasterizing: [
