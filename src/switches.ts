@@ -19,19 +19,17 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-renderer-backgrounding'
         ],
         experimentalFlags_increaseLimits: [
-	     'renderer-process-limit',
-	     'max-active-webgl-contexts=100',
-	     'webrtc-max-cpu-consumption-percentage=100'
-	],
+            'disable-gpu-driver-bug-workarounds'
+        ],
         experimentalFlags_lowLatency: [
             'enable-highres-timer',
             'enable-quic',
             'ignore-gpu-blocklist'
         ],
         experimentalFlags_experimental: [
-	    'use-gl=angle',
+            'enable-features=BlinkCompositorUseDisplayThreadPriority',
             'enable-features=DefaultPassthroughCommandDecoder'
-	],
+        ],
         safeFlags_gpuRasterizing: [
             'enable-gpu-rasterization',
             'enable-oop-rasterization',
@@ -68,27 +66,25 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-features=ParkableStringsToDisk',
             'disable-features=CompositeCrossOriginIframes',
             'disable-features=VaapiVP9Encoder',
-            'disable-features=MediaCapabilitiesQueryGpuFactories'
+            'disable-features=MediaCapabilitiesQueryGpuFactories',
+	    'disable-features=H264DecoderBufferIsCompleteFrame'
         ]
     };
 
-    for (const switchType in switches) {
+    for (const [switchType, switchItems] of Object.entries(switches)) {
         if (userPrefs[switchType]) {
-            switches[switchType].forEach((switchItem) => {
-                app.commandLine.appendSwitch(switchItem);
-            });
+            app.commandLine.appendSwitch(...switchItems);
         }
     }
 
-    if (userPrefs['angle-backend'] !== 'default') {
-        if (userPrefs['angle-backend'] === 'vulkan') {
-            app.commandLine.appendSwitch('use-angle', 'vulkan');
-            app.commandLine.appendSwitch('use-vulkan');
-            app.commandLine.appendSwitch('--enable-features=Vulkan');
+    const angleBackend = userPrefs['angle-backend'];
+    if (angleBackend !== 'default') {
+        if (angleBackend === 'vulkan') {
+            app.commandLine.appendSwitch('use-angle', 'vulkan', 'use-vulkan', '--enable-features=Vulkan');
             console.log('VULKAN INITIALIZED');
         } else {
-            app.commandLine.appendSwitch('use-angle', userPrefs['angle-backend'] as string);
-            console.log(`Using Angle: ${userPrefs['angle-backend']}`);
+            app.commandLine.appendSwitch('use-angle', angleBackend as string);
+            console.log(`Using Angle: ${angleBackend}`);
         }
     }
 
