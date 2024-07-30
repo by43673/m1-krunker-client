@@ -15,8 +15,13 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-component-update'
         ],
         safeFlags_helpfulFlags: [
-            'disable-background-timer-throttling',
-            'disable-renderer-backgrounding'
+            'enable-javascript-harmony',
+	'enable-future-v8-vm-features',
+	'enable-webgl', // might be useless since this is default but ensure
+	'enable-webgl2-compute-context',
+	'disable-background-timer-throttling',
+	'disable-renderer-backgrounding'
+
         ],
         experimentalFlags_increaseLimits: [
             'disable-gpu-driver-bug-workarounds'
@@ -39,34 +44,13 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
             'disable-frame-rate-limit',
             'disable-gpu-vsync',
             'disable-blink-features=ExperimentalIsInputPending',
-            'disable-blink-features=CompositeSVG',
-            'disable-blink-features=CompositeRelativeKeyframes',
             'disable-blink-features=LayoutNGFragmentItem',
             'disable-blink-features=LayoutNGFieldset',
             'disable-blink-features=LayoutNGForControls',
             'disable-blink-features=LayoutNGLayoutOverflow',
             'disable-blink-features=LayoutNGWebkitBox',
-            'disable-blink-features=TableCellNewPercents',
             'disable-features=UsePreferredIntervalForVideo',
-            'disable-features=ParentNodeReplaceChildren',
-            'disable-features=FontPreloadingDelaysRendering',
-            'disable-features=AlignFontDisplayAutoTimeoutWithLCPGoal',
-            'disable-features=DecodeJpeg420ImagesToYUV',
-            'disable-blink-features=CSSFocusVisible',
-            'disable-blink-features=CSSFontMetricsOverride',
-            'disable-blink-features=CSSMarkerPseudoElement',
-            'disable-blink-features=CSSOMViewScrollCoordinates',
-            'disable-blink-features=CSSAspectRatioProperty',
-            'disable-blink-features=FlexAspectRatio',
-            'disable-blink-features=CSSKeyframesMemoryReduction',
-            'disable-blink-features=CSSPseudoIs',
-            'disable-blink-features=CSSPseudoWhere',
-            'disable-blink-features=CSSReducedFontLoadingLayoutInvalidations',
-            'disable-features=CompressParkableStrings',
-            'disable-features=ParkableStringsToDisk',
-            'disable-features=CompositeCrossOriginIframes',
-            'disable-features=VaapiVP9Encoder',
-            'disable-features=MediaCapabilitiesQueryGpuFactories',
+	    'disable-features=ForcePreferredIntervalForVideo',
 	    'disable-features=H264DecoderBufferIsCompleteFrame'
         ]
     };
