@@ -27,7 +27,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 
 		// Don't require user gesture for autoplay (thanks Commander)
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 
 		console.log('Applied helpful flags');
@@ -48,22 +47,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		// do they crash the game? not for me. do they actually help? ¯\_(ツ)_/¯
-		app.commandLine.appendSwitch('disable-low-end-device-mode');
-		app.commandLine.appendSwitch('enable-accelerated-video-decode');
-		app.commandLine.appendSwitch('enable-native-gpu-memory-buffers');
-		app.commandLine.appendSwitch('high-dpi-support', '1');
-		app.commandLine.appendSwitch('ignore-gpu-blacklist');
-		app.commandLine.appendSwitch('no-pings');
-		app.commandLine.appendSwitch('no-proxy-server');
-
-		// disable-canvas-aa
-
+		app.commandLine.appendSwitch('enable-blink-features', 'BlinkCompositorUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-blink-features', 'GpuUseDisplayThreadPriority');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
+		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
 		console.log('GPU rasterization active');
 	}
@@ -71,9 +62,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.fpsUncap) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
-		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');
-		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
+		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		console.log('Removed FPS Cap');
 	}
 
