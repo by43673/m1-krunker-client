@@ -1,4 +1,4 @@
-# Eyy finally fixed weird black screen bug
+# This is just crankshaft fork with slight modifications
 
 # Important(Yes, again)
 Use third party software such as usb overdrive or logitech ghub to keybind to fix aim freeze. No flags atm to fix this(impossible to fix with flags)
