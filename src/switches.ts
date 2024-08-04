@@ -65,6 +65,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('disable-blink-features', 'ExperimentalIsInputPending');
+		app.commandLine.appendSwitch('disable-blink-features', 'CompositeRelativeKeyframes');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		console.log('Removed FPS Cap');
 	}
