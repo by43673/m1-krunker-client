@@ -48,11 +48,13 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
+		pp.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
 		console.log('GPU rasterization active');
 	}
