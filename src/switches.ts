@@ -39,10 +39,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied flags to increase limits');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
-		app.commandLine.appendSwitch('enable-highres-timer'); // supposedly lowers latency
-		app.commandLine.appendSwitch('enable-quic'); // enables an experimental low-latency protocol
-		app.commandLine.appendSwitch('enable-accelerated-2d-canvas');
-
+		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
@@ -51,10 +50,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
-		// do they crash the game? not for me. do they actually help? yeah kind of. depending on your gpu etc.
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
-		app.commandLine.appendSwitch('enable-oop-rasterization');
-		app.commandLine.appendSwitch('disable-zero-copy'); // this is really important, otherwise the game crashes.
+		app.commandLine.appendSwitch('enable-gpu-rasterization');
+		app.commandLine.appendSwitch('disable-zero-copy'); 
 		console.log('GPU rasterization active');
 	}
 
