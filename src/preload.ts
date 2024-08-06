@@ -2,7 +2,7 @@
 import { join as pathJoin, resolve as pathResolve } from 'path';
 import { ipcRenderer } from 'electron';
 import { fetchGame } from './matchmaker';
-import { hasOwn, createElement, hiddenClassesImages, injectSettingsCSS, toggleSettingCSS } from './utils';
+import { hasOwn, createElement, hiddenClassesImages, injectSettingsCSS, toggleSettingCSS, repoID } from './utils';
 import { renderSettings } from './settingsui';
 import { compareVersions } from 'compare-versions';
 
@@ -26,7 +26,6 @@ export const strippedConsole = {
 };
 
 const $assets = pathResolve(__dirname, '..', 'assets');
-const repoID = 'KraXen72/crankshaft';
 
 /** actual css for settings that are style-based (hide ads, etc)*/
 export const styleSettingsCSS = {
@@ -148,7 +147,7 @@ ipcRenderer.on('injectClientCSS', (_event, _userPrefs: UserPrefs, version: strin
 
 		// i am not sure if you should be injecting more elements into a svg element, but it seems to work. feel free to pr a better version tho.
 		logoSVG.appendChild(createElement('div', { class: 'crankshaft-holder-l', id: '#loadInfoLHolder', text: `v${version}` }));
-		logoSVG.appendChild(createElement('div', { class: 'crankshaft-holder-r', id: '#loadInfoRHolder', text: 'Client by KraXen72' }));
+		logoSVG.appendChild(createElement('div', { class: 'crankshaft-holder-r', id: '#loadInfoRHolder', text: 'by KraXen72 and contributors' }));
 
 		const observerConfig = { attributes: true, childList: true, subtree: true };
 		const callback = (mutationList: MutationRecord[], observer: MutationObserver) => {
@@ -208,21 +207,27 @@ export function getTimezoneByRegionKey(key: 'code' | 'id', value: string) {
 function patchSettings(_userPrefs: UserPrefs) {
 	// hooking & binding credit: https://github.com/asger-finding/anotherkrunkerclient/blob/main/src/preload/game-settings.ts
 	let interval: number | NodeJS.Timer = null;
+	strippedConsole.log('waiting to hook settings...');
 
 	function hookSettings() {
 		const settingsWindow = window.windows[0];
 		let selectedTab = settingsWindow.tabIndex;
 
-		const isClientTab = () => {
+		function isClientTab() {
 			const allTabsCount = settingsWindow.tabs[settingsWindow.settingType].length - 1;
 			return selectedTab === allTabsCount;
-		};
+		}
+
+		function safeRenderSettings() {
+			const settHolder = document.getElementById('settHolder');
+			if (!isClientTab() && settHolder !== null) settHolder.classList.remove('Crankshaft-settings');
+			if (isClientTab()) renderSettings();
+		}
 
 		const showWindowHook = window.showWindow.bind(window);
 		const getSettingsHook = settingsWindow.getSettings.bind(settingsWindow);
 		const changeTabHook = settingsWindow.changeTab.bind(settingsWindow);
 
-		// coldStart: settings window is launched while clientTab === true
 		window.showWindow = (...args: unknown[]) => {
 			const result = showWindowHook(...args);
 
@@ -243,9 +248,7 @@ function patchSettings(_userPrefs: UserPrefs) {
 			const result = changeTabHook(...args);
 			selectedTab = settingsWindow.tabIndex;
 
-			const settHolder = document.getElementById('settHolder');
-			if (!isClientTab() && settHolder !== null) settHolder.classList.remove('Crankshaft-settings');
-			if (isClientTab()) renderSettings();
+			safeRenderSettings();
 
 			return result;
 		};
@@ -272,6 +275,8 @@ function patchSettings(_userPrefs: UserPrefs) {
 
 			return result;
 		};
+
+		safeRenderSettings();
 	}
 
 	function waitForWindow0() {
@@ -285,6 +290,7 @@ function patchSettings(_userPrefs: UserPrefs) {
 			&& typeof window.windows[0].changeTab === 'function'
 		) {
 			clearInterval(interval);
+			strippedConsole.log('hooking settings');
 			hookSettings();
 		}
 	}

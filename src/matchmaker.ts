@@ -7,6 +7,8 @@ export const MATCHMAKER_REGIONS = ['MBI', 'NY', 'FRA', 'SIN', 'DAL', 'SYD', 'MIA
 
 // https://greasyfork.org/en/scripts/468482-kraxen-s-krunker-utils
 
+/// <reference path="global.d.ts" />
+
 function getGameMode(num: number) {
 	return MATCHMAKER_GAMEMODES[num];
 }
