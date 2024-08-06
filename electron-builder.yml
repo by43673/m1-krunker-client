@@ -1,4 +1,7 @@
 appId: com.kraxen72.crankshaft
+publish:
+    - provider: github
+      publishAutoUpdate: false
 win:
     artifactName: ${productName}-portable-${os}-${arch}.${ext}
     target:

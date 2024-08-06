@@ -12,17 +12,53 @@
 	display: grid;
 	grid-auto-columns: 1fr;
 	grid-template-columns: 0fr 1fr 0fr;
-	grid-template-areas: "icon title input";
-	grid-template-rows: 0fr;
+	grid-template-areas: 
+	"icon title input"
+	"desc desc desc";
+	grid-template-rows: 0fr min-content;
 	align-items: center;
 }
 .Crankshaft-settings .settName.multisel {
 	grid-template-rows: min-content 1fr;
 	grid-template-columns: 0fr 1fr;
-	grid-template-areas: "icon title" "input input";
+	grid-template-areas: 
+	"icon title" 
+	"input input";
+}
+.Crankshaft-settings .settName.has-button {
+	grid-template-areas: 
+	"icon title button input"
+	"desc desc desc desc";
+	grid-template-columns: 0fr 1fr min-content 0fr;
+}
+.Crankshaft-settings .settName.has-button .settingsBtn { 
+	grid-area: button;
+	margin: 0 .5rem;
 }
 
-/* multiple select */
+.Crankshaft-settings .settName.crankshaft-button-holder { 
+	grid-template-columns: 1fr;
+	grid-auto-columns: min-content;
+	column-gap: 0.25rem;
+	grid-template-areas: unset;
+	grid-template-rows: 0fr;
+	grid-auto-flow: column;
+}
+.Crankshaft-settings .crankshaft-button-holder .buttons-title, .material-icons { color: inherit; }
+.Crankshaft-settings .crankshaft-button-holder .settingsBtn, 
+.Crankshaft-settings .settName.has-button .settingsBtn { 
+	width: max-content 
+}
+
+/* type: num */
+.Crankshaft-settings .settName.num .setting-input-wrapper {
+	display: flex;
+}
+.Crankshaft-settings .settName.num .setting-input-wrapper .slidecontainer {
+	margin-top: -8px;
+}
+
+/* type: multisel */
 .crankshaft-multisel-parent {
 	display: grid;
 	grid-template-columns: repeat(5, 1fr);
@@ -46,14 +82,16 @@ span.optDescription {
     right: 0;
 }
 
-.Crankshaft-settings .settName .setting-title {
-	grid-area: title;
-}
 .Crankshaft-settings .settName.multisel label {
 	font-size: 1.1rem;
 }
 .Crankshaft-settings .settName.multisel input {
 	margin-left: .25rem;
+}
+
+/* general settings */
+.Crankshaft-settings .settName .setting-title {
+	grid-area: title;
 }
 
 .Crankshaft-settings .settName .s-update:disabled,
@@ -66,7 +104,7 @@ span.optDescription {
 	box-sizing: border-box;
 }
 
-.Crankshaft-settings .setting .setting-desc {
+.Crankshaft-settings .setting .desc-icon {
 	grid-area: icon;
 	cursor: pointer;
 	font-size: 1rem;
@@ -83,12 +121,12 @@ span.optDescription {
 	align-items: center;
 }
 
-.Crankshaft-settings .setting .setting-desc.instant {
+.Crankshaft-settings .setting .desc-icon.instant {
 	background-color: rgba(1, 89, 220, 0.16);
 	border: 2px solid rgba(3, 133, 255, 0.81);
 }
 
-.Crankshaft-settings .setting .setting-desc.instant svg path {
+.Crankshaft-settings .setting .desc-icon.instant svg path {
 	color: #0385ff;
 	fill: currentColor;
 }
@@ -100,49 +138,49 @@ span.optDescription {
 	grid-area: input;
 }
 
-.Crankshaft-settings .setting.safety-1 .setting-desc,
-.Crankshaft-settings .setting .setting-desc.refresh-icon {
+.Crankshaft-settings .setting.safety-1 .desc-icon,
+.Crankshaft-settings .setting .desc-icon.refresh-icon {
 	background-color: rgba(99, 99, 99, 0.16);
 	border: 2px solid rgba(78, 78, 78, 0.81);
 }
 
-.Crankshaft-settings .setting.safety-1 .setting-desc svg path,
-.Crankshaft-settings .setting .setting-desc.refresh-icon svg path {
+.Crankshaft-settings .setting.safety-1 .desc-icon svg path,
+.Crankshaft-settings .setting .desc-icon.refresh-icon svg path {
 	color: #969696;
 	fill: currentColor;
 }
 
-.Crankshaft-settings .setting.safety-2 .setting-desc {
+.Crankshaft-settings .setting.safety-2 .desc-icon {
 	background-color: rgba(220, 180, 1, 0.16);
 	border: 2px solid rgba(241, 186, 6, 0.81);
 }
 
-.Crankshaft-settings .setting.safety-2 .setting-desc svg path {
+.Crankshaft-settings .setting.safety-2 .desc-icon svg path {
 	color: #ffd903;
 	fill: currentColor;
 }
 
-.Crankshaft-settings .setting.safety-3 .setting-desc {
+.Crankshaft-settings .setting.safety-3 .desc-icon {
 	background-color: rgba(220, 118, 1, 0.16);
 	border: 2px solid rgba(241, 131, 6, 0.81);
 }
 
-.Crankshaft-settings .setting.safety-3 .setting-desc svg path {
+.Crankshaft-settings .setting.safety-3 .desc-icon svg path {
 	color: #ff9203;
 	fill: currentColor;
 }
 
-.Crankshaft-settings .setting.safety-4 .setting-desc {
+.Crankshaft-settings .setting.safety-4 .desc-icon {
 	background-color: rgba(220, 17, 1, 0.16);
 	border: 2px solid rgba(239, 6, 6, 0.81);
 }
 
-.Crankshaft-settings .setting.safety-4 .setting-desc svg path {
+.Crankshaft-settings .setting.safety-4 .desc-icon svg path {
 	color: #ff0303;
 	fill: currentColor;
 }
 
-.setting-desc {
+.desc-icon {
 	position: relative;
 }
 
@@ -156,7 +194,7 @@ span.optDescription {
 	overflow: hidden;
 	max-height: 500px;
 	margin-top: 5px;
-	grid-area: 2/1/3/4;
+	grid-area: desc;
 }
 
 .setting-desc-new a {
@@ -197,7 +235,7 @@ input:checked+.advancedSlider:hover {
 .crankshaft-holder-r, 
 .crankshaft-holder-update {
 	position: absolute;
-	font-size: 20px !important;
+	font-size: 1.125rem !important;
 	color: rgba(255, 255, 255, 0.7);
 	display: block !important;
 }
@@ -254,6 +292,39 @@ input:checked+.advancedSlider:hover {
     padding: 0.08rem 0.4rem;
     border-radius: 3px;
     border: 2px solid #333333
+}
+
+.settings-Userscript-Author {
+	opacity: 0.4;
+	font-size: 0.9rem;
+	color: inherit;
+}
+
+.brokenCustomUserscriptSettingWrapper .crankshaft-button-holder.setting.settName {
+	display: block;
+	width: 95%;
+}
+
+.setting.settName.safety-0.brokenCustomUserscriptSettingWrapper {
+	color: red;
+	background: rgba(200, 0, 0, 0.2);
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.brokenCustomUserscriptSettingWrapper div.setting-title.brokenCustomUserscriptSettingTitle {
+	color: red !important;
+	grid-area: unset !important;
+	border-bottom: 5px solid;
+    padding-bottom: 0.4rem;
+}
+
+.setting-desc-new.brokenCustomUserscriptSettingDesc {
+	width: 100%;
+	color: red !important;
+	font-style: italic;
+	font-weight: bolder;
 }
 
 .hiddenClasses-hideAds-bottomOffset { bottom: 80px !important; }

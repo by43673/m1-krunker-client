@@ -2,7 +2,10 @@
 #aHider,
 #adCon,
 #rightABox,
-#aContainer
-#braveWarning {
-    display: none !important
+#aContainer,
+#topRightAdHolder,
+div#aContainer,
+#braveWarning,
+#topRightAdHolder {
+  display: none !important;
 }
