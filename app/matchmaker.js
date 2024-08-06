@@ -1,81 +1,10 @@
 "use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var matchmaker_exports = {};
-__export(matchmaker_exports, {
-  MATCHMAKER_GAMEMODES: () => MATCHMAKER_GAMEMODES,
-  MATCHMAKER_REGIONS: () => MATCHMAKER_REGIONS,
-  fetchGame: () => fetchGame
-});
-module.exports = __toCommonJS(matchmaker_exports);
-var import_preload = require("./preload");
-var import_utils = require("./utils");
-const MATCHMAKER_GAMEMODES = ["Free for All", "Team Deathmatch", "Hardpoint", "Capture the Flag", "Parkour", "Hide & Seek", "Infected", "Race", "Last Man Standing", "Simon Says", "Gun Game", "Prop Hunt", "Boss Hunt", "Classic FFA", "Deposit", "Stalker", "King of the Hill", "One in the Chamber", "Trade", "Kill Confirmed", "Defuse", "Sharp Shooter", "Traitor", "Raid", "Blitz", "Domination", "Squad Deathmatch", "Kranked FFA", "Team Defender", "Deposit FFA", "Chaos Snipers", "Bighead FFA"];
-const MATCHMAKER_REGIONS = ["MBI", "NY", "FRA", "SIN", "DAL", "SYD", "MIA", "BHN", "TOK", "BRZ", "AFR", "LON", "CHI", "SV", "STL", "MX"];
-function getGameMode(num) {
-  return MATCHMAKER_GAMEMODES[num];
-}
-function matchmakerMessageText(game, meeting, all) {
-  return `Game found! ${game.gameID} (${meeting}/${all} games meet criteria)
+var s=Object.defineProperty;var M=Object.getOwnPropertyDescriptor;var k=Object.getOwnPropertyNames;var T=Object.prototype.hasOwnProperty;var y=(e,a)=>{for(var i in a)s(e,i,{get:a[i],enumerable:!0})},S=(e,a,i,o)=>{if(a&&typeof a=="object"||typeof a=="function")for(let n of k(a))!T.call(e,n)&&n!==i&&s(e,n,{get:()=>a[n],enumerable:!(o=M(a,n))||o.enumerable});return e};var A=e=>S(s({},"__esModule",{value:!0}),e);var I={};y(I,{MATCHMAKER_GAMEMODES:()=>u,MATCHMAKER_REGIONS:()=>C,fetchGame:()=>R});module.exports=A(I);var d=require("./preload"),p=require("./utils");const u=["Free for All","Team Deathmatch","Hardpoint","Capture the Flag","Parkour","Hide & Seek","Infected","Race","Last Man Standing","Simon Says","Gun Game","Prop Hunt","Boss Hunt","Classic FFA","Deposit","Stalker","King of the Hill","One in the Chamber","Trade","Kill Confirmed","Defuse","Sharp Shooter","Traitor","Raid","Blitz","Domination","Squad Deathmatch","Kranked FFA","Team Defender","Deposit FFA","Chaos Snipers","Bighead FFA"],C=["MBI","NY","FRA","SIN","DAL","SYD","MIA","BHN","TOK","BRZ","AFR","LON","CHI","SV","STL","MX"];function D(e){return u[e]}function F(e,a,i){return`Game found! ${e.gameID} (${a}/${i} games meet criteria)
 	
-	Region: ${game.region}
-	Map: ${game.map}
-	Gamemode: ${game.gamemode}
-	Players: ${game.playerCount}/${game.playerLimit}
-	Time remaining: ${(0, import_utils.secondsToTimestring)(game.remainingTime)}
+	Region: ${e.region}
+	Map: ${e.map}
+	Gamemode: ${e.gamemode}
+	Players: ${e.playerCount}/${e.playerLimit}
+	Time remaining: ${(0,p.secondsToTimestring)(e.remainingTime)}
 	
-	Join game?`;
-}
-async function fetchGame(_userPrefs) {
-  const criteria = {
-    regions: _userPrefs.matchmaker_regions,
-    gameModes: _userPrefs.matchmaker_gamemodes,
-    minPlayers: _userPrefs.matchmaker_minPlayers,
-    maxPlayers: _userPrefs.matchmaker_maxPlayers,
-    minRemainingTime: _userPrefs.matchmaker_minRemainingTime
-  };
-  const response = await fetch(`https://matchmaker.krunker.io/game-list?hostname=${window.location.hostname}`);
-  const result = await response.json();
-  const games = [];
-  for (const game of result.games) {
-    const gameID = game[0];
-    const region = gameID.split(":")[0];
-    const playerCount = game[2];
-    const playerLimit = game[3];
-    const map = game[4].i;
-    const gamemode = getGameMode(game[4].g);
-    const remainingTime = game[5];
-    if (!criteria.regions.includes(region) || !criteria.gameModes.includes(gamemode) || playerCount < criteria.minPlayers || playerCount > criteria.maxPlayers || remainingTime < criteria.minRemainingTime || playerCount === playerLimit || window.location.href.includes(gameID))
-      continue;
-    games.push({ gameID, region, playerCount, playerLimit, map, gamemode, remainingTime });
-  }
-  if (games.length > 0) {
-    const game = games[Math.floor(Math.random() * games.length)];
-    if (confirm(matchmakerMessageText(game, games.length, result.games.length)))
-      window.location.href = `https://krunker.io/?game=${game.gameID}`;
-  } else {
-    alert("Couldn't find any games matching your criteria. Please change them or try again later.");
-    import_preload.strippedConsole.log(criteria);
-  }
-}
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  MATCHMAKER_GAMEMODES,
-  MATCHMAKER_REGIONS,
-  fetchGame
-});
+	Join game?`}async function R(e){const a={regions:e.matchmaker_regions,gameModes:e.matchmaker_gamemodes,minPlayers:e.matchmaker_minPlayers,maxPlayers:e.matchmaker_maxPlayers,minRemainingTime:e.matchmaker_minRemainingTime},o=await(await fetch(`https://matchmaker.krunker.io/game-list?hostname=${window.location.hostname}`)).json(),n=[];for(const t of o.games){const r=t[0],c=r.split(":")[0],m=t[2],l=t[3],f=t[4].i,g=D(t[4].g),h=t[5];!a.regions.includes(c)||!a.gameModes.includes(g)||m<a.minPlayers||m>a.maxPlayers||h<a.minRemainingTime||m===l||window.location.href.includes(r)||n.push({gameID:r,region:c,playerCount:m,playerLimit:l,map:f,gamemode:g,remainingTime:h})}if(n.length>0){const t=n[Math.floor(Math.random()*n.length)];confirm(F(t,n.length,o.games.length))&&(window.location.href=`https://krunker.io/?game=${t.gameID}`)}else alert("Couldn't find any games matching your criteria. Please change them or try again later."),d.strippedConsole.log(a)}0&&(module.exports={MATCHMAKER_GAMEMODES,MATCHMAKER_REGIONS,fetchGame});

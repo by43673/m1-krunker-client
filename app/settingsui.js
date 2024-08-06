@@ -1,492 +1,53 @@
 "use strict";
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var __accessCheck = (obj, member, msg) => {
-  if (!member.has(obj))
-    throw TypeError("Cannot " + msg);
-};
-var __privateGet = (obj, member, getter) => {
-  __accessCheck(obj, member, "read from private field");
-  return getter ? getter.call(obj) : member.get(obj);
-};
-var __privateAdd = (obj, member, value) => {
-  if (member.has(obj))
-    throw TypeError("Cannot add the same private member more than once");
-  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-};
-var __privateSet = (obj, member, value, setter) => {
-  __accessCheck(obj, member, "write to private field");
-  setter ? setter.call(obj, value) : member.set(obj, value);
-  return value;
-};
-var settingsui_exports = {};
-__export(settingsui_exports, {
-  renderSettings: () => renderSettings
-});
-module.exports = __toCommonJS(settingsui_exports);
-var import_fs = require("fs");
-var import_electron = require("electron");
-var import_utils = require("./utils");
-var import_preload = require("./preload");
-var import_userscripts = require("./userscripts");
-var import_matchmaker = require("./matchmaker");
-var _wrapper, _disabled;
-var RefreshEnum = /* @__PURE__ */ ((RefreshEnum2) => {
-  RefreshEnum2[RefreshEnum2["notNeeded"] = 0] = "notNeeded";
-  RefreshEnum2[RefreshEnum2["refresh"] = 1] = "refresh";
-  RefreshEnum2[RefreshEnum2["reloadApp"] = 2] = "reloadApp";
-  return RefreshEnum2;
-})(RefreshEnum || {});
-let userPrefs;
-let userPrefsPath;
-let userPrefsCache;
-let refreshNeeded = 0 /* notNeeded */;
-let refreshNotifElement;
-document.addEventListener("DOMContentLoaded", () => {
-  import_electron.ipcRenderer.send("settingsUI_requests_userPrefs");
-});
-import_electron.ipcRenderer.on("m_userPrefs_for_settingsUI", (event, recieved_userPrefsPath, recieved_userPrefs) => {
-  userPrefsPath = recieved_userPrefsPath;
-  userPrefs = recieved_userPrefs;
-  userPrefsCache = { ...recieved_userPrefs };
-});
-function transformMarrySettings(data, desc, callback) {
-  const renderReadySettings = Object.keys(desc).map((key) => ({ key, ...desc[key] })).map((obj) => ({ callback, value: data[obj.key], ...obj }));
-  return renderReadySettings;
-}
-const settingsDesc = {
-  fpsUncap: { title: "Un-cap FPS", type: "bool", desc: "", safety: 0, cat: 0 },
-  "angle-backend": { title: "ANGLE Backend", type: "sel", safety: 0, opts: ["default", "gl", "d3d11", "d3d9", "d3d11on12", "vulkan"], cat: 0 },
-  fullscreen: { title: "Start in Windowed/Fullscreen mode", type: "sel", desc: "Use 'borderless' if you have client-capped fps and unstable fps in fullscreen", safety: 0, cat: 0, opts: ["windowed", "maximized", "fullscreen", "borderless"] },
-  inProcessGPU: { title: "In-Process GPU (video capture)", type: "bool", desc: "Enables video capture & embeds the GPU under the same process", safety: 1, cat: 0 },
-  resourceSwapper: { title: "Resource swapper", type: "bool", desc: "Enable Krunker Resource Swapper. Reads Documents/Crankshaft/swapper", safety: 0, cat: 0 },
-  discordRPC: { title: "Discord Rich Presence", type: "bool", desc: "Enable Discord Rich Presence. Shows Gamemode, Map, Class and Skin", safety: 0, cat: 0 },
-  extendedRPC: { title: "Extended Discord RPC", type: "bool", desc: "Adds Github + Discord buttons to RPC. No effect if RPC is off.", safety: 0, cat: 0, instant: true },
-  hideAds: { title: "Hide/Block Ads", type: "sel", desc: "With 'hide' you can still claim free KR. Using 'block' also blocks trackers.", safety: 0, cat: 0, refreshOnly: true, opts: ["block", "hide", "off"] },
-  customFilters: { title: "Custom Filters", type: "bool", desc: "Enable custom network filters. Reads Documents/Crankshaft/filters.txt", safety: 0, cat: 0, refreshOnly: true },
-  userscripts: { title: "Userscript support", type: "bool", desc: "Enable userscript support. place .js files in Documents/Crankshaft/scripts", safety: 1, cat: 0 },
-  menuTimer: { title: "Menu Timer", type: "bool", safety: 0, cat: 1, instant: true },
-  hideReCaptcha: { title: "Hide reCaptcha", type: "bool", safety: 0, cat: 1, instant: true },
-  quickClassPicker: { title: "Quick Class Picker", type: "bool", safety: 0, cat: 1, instant: true },
-  clientSplash: { title: "Client Splash Screen", type: "bool", safety: 0, cat: 1, refreshOnly: true },
-  regionTimezones: { title: "Region Picker Timezones", type: "bool", desc: "Adds local time to all region pickers", safety: 0, cat: 1, refreshOnly: true },
-  matchmaker: { title: "Custom Matchmaker", type: "bool", desc: "Configurable matchmaker. Default hotkey F1", safety: 0, cat: 2, refreshOnly: true },
-  matchmaker_F6: { title: "F6 hotkey", type: "bool", desc: "Replace default 'New Lobby' F6 hotkey with Matchmaker ", safety: 0, cat: 2 },
-  matchmaker_regions: { title: "Whitelisted regions", type: "multisel", desc: "", safety: 0, cat: 2, opts: import_matchmaker.MATCHMAKER_REGIONS, cols: 16, instant: true },
-  matchmaker_gamemodes: { title: "Whitelisted gamemodes", type: "multisel", desc: "", safety: 0, cat: 2, opts: import_matchmaker.MATCHMAKER_GAMEMODES, cols: 4, instant: true },
-  matchmaker_minRemainingTime: { title: "Minimum remaining seconds", type: "num", min: 0, max: 3600, safety: 0, cat: 2, instant: true },
-  matchmaker_minPlayers: { title: "Minimum players in Lobby", type: "num", min: 0, max: 7, safety: 0, cat: 2, instant: true },
-  matchmaker_maxPlayers: { title: "Maximum players in Lobby", type: "num", min: 0, max: 7, safety: 0, cat: 2, instant: true, desc: "if you set the criteria too strictly, matchmaker won't find anything" },
-  logDebugToConsole: { title: "Log debug & GPU info to electron console", type: "bool", safety: 0, cat: 3 },
-  alwaysWaitForDevTools: { title: "Always wait for DevTools", desc: "Crankshaft uses an alt. method to open Devtools in a new window if they take too long. This disables that. Might cause DevTools to not work", type: "bool", safety: 3, cat: 3 },
-  safeFlags_removeUselessFeatures: { title: "Remove useless features", type: "bool", desc: "Adds a lot of flags that disable useless features.", safety: 1, cat: 3 },
-  safeFlags_gpuRasterizing: { title: "GPU rasterization", type: "bool", desc: "Enable GPU rasterization and disable Zero-copy rasterizer so rasterizing is stable", safety: 2, cat: 3 },
-  safeFlags_helpfulFlags: { title: "(Potentially) useful flags", type: "bool", desc: "Enables javascript-harmony, future-v8-vm-features, webgl2-compute-context.", safety: 3, cat: 3 },
-  disableAccelerated2D: { title: "Disable Accelerated 2D canvas", type: "bool", desc: "", safety: 3, cat: 3 },
-  experimentalFlags_increaseLimits: { title: "Increase limits flags", type: "bool", desc: "Sets renderer-process-limit, max-active-webgl-contexts and webrtc-max-cpu-consumption-percentage to 100, adds ignore-gpu-blacklist", safety: 4, cat: 3 },
-  experimentalFlags_lowLatency: { title: "Lower Latency flags", type: "bool", desc: "Adds following flags: enable-highres-timer, enable-quic (experimental low-latency protocol) and enable-accelerated-2d-canvas", safety: 4, cat: 3 },
-  experimentalFlags_experimental: { title: "Experimental flags", type: "bool", desc: "Adds following flags: disable-low-end-device-mode, high-dpi-support, ignore-gpu-blacklist, no-pings and no-proxy-server", safety: 4, cat: 3 }
-};
-const safetyDesc = [
-  "This setting is safe/standard",
-  "Proceed with caution",
-  "This setting is not recommended",
-  "This setting is experimental",
-  "This setting is experimental and unstable. Use at your own risk."
-];
-const categoryNames = [
-  { name: "Client Settings", cat: "mainSettings" },
-  { name: "Visual Settings", cat: "styleSettings" },
-  { name: "Matchmaker", cat: "matchmakerSettings" },
-  { name: "Advanced Settings", cat: "advSettings" }
-];
-const refreshToUnloadMessage = "REFRESH PAGE TO UNLOAD USERSCRIPT";
-function saveSettings() {
-  (0, import_fs.writeFileSync)(userPrefsPath, JSON.stringify(userPrefs, null, 2), { encoding: "utf-8" });
-  import_electron.ipcRenderer.send("settingsUI_updates_userPrefs", userPrefs);
-}
-function recalculateRefreshNeeded() {
-  refreshNeeded = 0 /* notNeeded */;
-  for (let i = 0; i < Object.keys(userPrefs).length; i++) {
-    const cache = (item) => Array.isArray(item) ? [...item] : item;
-    const key = Object.keys(userPrefs)[i];
-    const descObj = settingsDesc[key];
-    const setting = cache(userPrefs[key]);
-    const cachedSetting = cache(userPrefsCache[key]);
-    const settingsEqual = Array.isArray(setting) && Array.isArray(cachedSetting) ? (0, import_utils.haveSameContents)(setting, cachedSetting) : setting === cachedSetting;
-    if (!settingsEqual) {
-      if (descObj?.instant) {
-        continue;
-      } else if (descObj?.refreshOnly) {
-        if (refreshNeeded < 1 /* refresh */)
-          refreshNeeded = 1 /* refresh */;
-      } else {
-        refreshNeeded = 2 /* reloadApp */;
-      }
-    }
-  }
-}
-function saveUserscriptTracker() {
-  (0, import_fs.writeFileSync)(import_userscripts.su.userscriptTrackerPath, JSON.stringify(import_userscripts.su.userscriptTracker, null, 2), { encoding: "utf-8" });
-}
-class SettingElem {
-  constructor(props) {
-    __privateAdd(this, _wrapper, void 0);
-    __privateAdd(this, _disabled, void 0);
-    this.props = props;
-    this.type = props.type;
-    this.HTML = "";
-    this.updateMethod = "";
-    this.updateKey = "";
-    __privateSet(this, _wrapper, false);
-    __privateSet(this, _disabled, false);
-    if (this.props.safety > 0)
-      this.HTML += skeleton.safetyIcon(safetyDesc[this.props.safety]);
-    else if (this.props.instant || this.props.refreshOnly)
-      this.HTML += skeleton.refreshIcon(this.props.instant ? "instant" : "refresh-icon");
-    if (this.props.key === "matchmaker_regions" && userPrefs.regionTimezones) {
-      this.props.cols = 8;
-      this.props.optDescriptions = import_matchmaker.MATCHMAKER_REGIONS.map((regionCode) => (0, import_preload.getTimezoneByRegionKey)("code", regionCode));
-    }
-    if ("userscriptReference" in props) {
-      const userscript = props.userscriptReference;
-      if (userscript.hasRan && !props.instant && props.type === "bool" && props.value === false) {
-        __privateSet(this, _disabled, true);
-        this.props.desc = refreshToUnloadMessage;
-      }
-    }
-    switch (props.type) {
-      case "bool":
-        this.HTML += `<span class="setting-title">${props.title}</span> 
+var _=Object.defineProperty;var ne=Object.getOwnPropertyDescriptor;var ae=Object.getOwnPropertyNames;var ie=Object.prototype.hasOwnProperty;var re=(t,e)=>{for(var s in e)_(t,s,{get:e[s],enumerable:!0})},oe=(t,e,s,n)=>{if(e&&typeof e=="object"||typeof e=="function")for(let r of ae(e))!ie.call(t,r)&&r!==s&&_(t,r,{get:()=>e[r],enumerable:!(n=ne(e,r))||n.enumerable});return t};var le=t=>oe(_({},"__esModule",{value:!0}),t);var X=(t,e,s)=>{if(!e.has(t))throw TypeError("Cannot "+s)};var R=(t,e,s)=>(X(t,e,"read from private field"),s?s.call(t):e.get(t)),q=(t,e,s)=>{if(e.has(t))throw TypeError("Cannot add the same private member more than once");e instanceof WeakSet?e.add(t):e.set(t,s)},E=(t,e,s,n)=>(X(t,e,"write to private field"),n?n.call(t,s):e.set(t,s),s);var ye={};re(ye,{renderSettings:()=>se});module.exports=le(ye);var V=require("path"),T=require("fs"),y=require("electron"),c=require("./utils"),b=require("./preload"),g=require("./userscripts"),U=require("./matchmaker"),D=require("./userscriptvalidators"),v,k,ce=(n=>(n[n.notNeeded=0]="notNeeded",n[n.refresh=1]="refresh",n[n.reloadApp=2]="reloadApp",n))(ce||{});let f,F,B,m={},Y,M=0,Q,H;document.addEventListener("DOMContentLoaded",()=>{y.ipcRenderer.send("settingsUI_requests_userPrefs")}),y.ipcRenderer.on("m_userPrefs_for_settingsUI",(t,e,s)=>{F=e.settingsPath,B=e.userscriptPreferencesPath,H=e,f=s,Y={...s},L.resourceSwapper.button={icon:"folder",text:"Swapper",callback:n=>P(n,H.swapperPath)},L.customFilters.button={icon:"filter_list",text:"Filters file",callback:n=>P(n,H.filtersPath)},L.userscripts.button={icon:"folder",text:"Scripts",callback:n=>P(n,H.userscriptsPath)}});function de(t,e,s){return Object.keys(e).map(r=>({key:r,...e[r]})).map(r=>({callback:s,value:t[r.key],...r}))}function P(t,e){t.stopPropagation(),y.shell.openPath(e)}const L={fpsUncap:{title:"Un-cap FPS",type:"bool",desc:"",safety:0,cat:0},"angle-backend":{title:"ANGLE Backend",type:"sel",safety:0,opts:["default","gl","d3d11","d3d9","d3d11on12","vulkan"],cat:0},fullscreen:{title:"Start in Windowed/Fullscreen mode",type:"sel",desc:"Use 'borderless' if you have client-capped fps and unstable fps in fullscreen",safety:0,cat:0,opts:["windowed","maximized","fullscreen","borderless"]},inProcessGPU:{title:"In-Process GPU (video capture)",type:"bool",desc:"Enables video capture & embeds the GPU under the same process",safety:1,cat:0},resourceSwapper:{title:"Resource swapper",type:"bool",desc:"Enable Krunker Resource Swapper. ",safety:0,cat:0},discordRPC:{title:"Discord Rich Presence",type:"bool",desc:"Enable Discord Rich Presence. Shows Gamemode, Map, Class and Skin",safety:0,cat:0},extendedRPC:{title:"Extended Discord RPC",type:"bool",desc:"Adds Github + Discord buttons to RPC. No effect if RPC is off.",safety:0,cat:0,instant:!0},hideAds:{title:"Hide/Block Ads",type:"sel",desc:"With 'hide' you can still claim free KR. Using 'block' also blocks trackers.",safety:0,cat:0,refreshOnly:!0,opts:["block","hide","off"]},customFilters:{title:"Custom Filters",type:"bool",desc:"Enable custom network filters. ",safety:0,cat:0,refreshOnly:!0},userscripts:{title:"Userscript support",type:"bool",desc:`Enable userscript support. read <a href="https://github.com/${c.repoID}/blob/master/USERSCRIPTS.md" target="_blank">USERSCRIPTS.md</a> for more info.`,safety:1,cat:0},menuTimer:{title:"Menu Timer",type:"bool",safety:0,cat:1,instant:!0},hideReCaptcha:{title:"Hide reCaptcha",type:"bool",safety:0,cat:1,instant:!0},quickClassPicker:{title:"Quick Class Picker",type:"bool",safety:0,cat:1,instant:!0},clientSplash:{title:"Client Splash Screen",type:"bool",safety:0,cat:1,refreshOnly:!0},regionTimezones:{title:"Region Picker Timezones",type:"bool",desc:"Adds local time to all region pickers",safety:0,cat:1,refreshOnly:!0},matchmaker:{title:"Custom Matchmaker",type:"bool",desc:"Configurable matchmaker. Default hotkey F1",safety:0,cat:2,refreshOnly:!0},matchmaker_F6:{title:"F6 hotkey",type:"bool",desc:"Replace default 'New Lobby' F6 hotkey with Matchmaker ",safety:0,cat:2},matchmaker_regions:{title:"Whitelisted regions",type:"multisel",desc:"",safety:0,cat:2,opts:U.MATCHMAKER_REGIONS,cols:16,instant:!0},matchmaker_gamemodes:{title:"Whitelisted gamemodes",type:"multisel",desc:"",safety:0,cat:2,opts:U.MATCHMAKER_GAMEMODES,cols:4,instant:!0},matchmaker_minRemainingTime:{title:"Minimum remaining seconds",type:"num",min:0,max:480,safety:0,cat:2,instant:!0},matchmaker_minPlayers:{title:"Minimum players in Lobby",type:"num",min:0,max:7,safety:0,cat:2,instant:!0},matchmaker_maxPlayers:{title:"Maximum players in Lobby",type:"num",min:0,max:7,safety:0,cat:2,instant:!0,desc:"if you set the criteria too strictly, matchmaker won't find anything"},logDebugToConsole:{title:"Log debug & GPU info to electron console",type:"bool",safety:0,cat:3},alwaysWaitForDevTools:{title:"Always wait for DevTools",desc:"Crankshaft uses an alt. method to open Devtools in a new window if they take too long. This disables that. Might cause DevTools to not work",type:"bool",safety:3,cat:3},safeFlags_removeUselessFeatures:{title:"Remove useless features",type:"bool",desc:"Adds a lot of flags that disable useless features.",safety:1,cat:3},safeFlags_gpuRasterizing:{title:"GPU rasterization",type:"bool",desc:"Enable GPU rasterization and disable Zero-copy rasterizer so rasterizing is stable",safety:2,cat:3},safeFlags_helpfulFlags:{title:"(Potentially) useful flags",type:"bool",desc:"Enables javascript-harmony, future-v8-vm-features, webgl2-compute-context.",safety:3,cat:3},disableAccelerated2D:{title:"Disable Accelerated 2D canvas",type:"bool",desc:"",safety:3,cat:3},experimentalFlags_increaseLimits:{title:"Increase limits flags",type:"bool",desc:"Sets renderer-process-limit, max-active-webgl-contexts and webrtc-max-cpu-consumption-percentage to 100, adds ignore-gpu-blacklist",safety:4,cat:3},experimentalFlags_lowLatency:{title:"Lower Latency flags",type:"bool",desc:"Adds following flags: enable-highres-timer, enable-quic (experimental low-latency protocol) and enable-accelerated-2d-canvas",safety:4,cat:3},experimentalFlags_experimental:{title:"Experimental flags",type:"bool",desc:"Adds following flags: disable-low-end-device-mode, high-dpi-support, ignore-gpu-blacklist, no-pings and no-proxy-server",safety:4,cat:3}},pe=["This setting is safe/standard","Proceed with caution","This setting is not recommended","This setting is experimental","This setting is experimental and unstable. Use at your own risk."],j=[{name:"Client Settings",cat:"mainSettings"},{name:"Visual Settings",cat:"styleSettings"},{name:"Matchmaker",cat:"matchmakerSettings"},{name:"Advanced Settings",cat:"advSettings"}],ee="REFRESH PAGE TO UNLOAD USERSCRIPT";function ue(){(0,T.writeFileSync)(F,JSON.stringify(f,null,2),{encoding:"utf-8"}),y.ipcRenderer.send("settingsUI_updates_userPrefs",f)}function he(t,e){try{const s=JSON.parse((0,T.readFileSync)((0,V.join)(B,`${t}.json`),"utf-8"));return Object.keys(s).forEach(n=>{(0,D.customSettingSavedJSONIsNotMalformed)(n,e,s)&&(m[t][n]=s[n])}),m[t]}catch{return{}}}function fe(t,e,s,n){const r=document.querySelector(`.${s}`);Object.keys(e).forEach(l=>{if(!n.includes(l)){const i=e[l],o=e[l].value;i.changed(o);const a=r.querySelector(`#settingElem-${l}`),u=a.querySelector(".s-update"),p=a.querySelector(".s-update-secondary");switch(m[t][l]=o,i.type){case"bool":u.checked=o;break;default:u.value=String(o),p&&(p.value=String(o));break}te(t)}})}function te(t){(0,T.writeFileSync)((0,V.join)(B,`${t}.json`),JSON.stringify(m[t],null,2),{encoding:"utf-8"})}function me(){M=0;for(let t=0;t<Object.keys(f).length;t++){const e=o=>Array.isArray(o)?[...o]:o,s=Object.keys(f)[t],n=L[s],r=e(f[s]),l=e(Y[s]);if(!(Array.isArray(r)&&Array.isArray(l)?(0,c.haveSameContents)(r,l):r===l)){if(n?.instant)continue;n?.refreshOnly?M<1&&(M=1):M=2}}}function ge(){(0,T.writeFileSync)(g.su.userscriptTrackerPath,JSON.stringify(g.su.userscriptTracker,null,2),{encoding:"utf-8"})}class G{constructor(e){q(this,v,void 0);q(this,k,void 0);switch(this.props=e,this.type=e.type,this.HTML="",this.updateMethod="",this.updateKey="",E(this,v,!1),E(this,k,!1),this.props.safety>0?this.HTML+=d.safetyIcon(pe[this.props.safety]):(this.props.instant||this.props.refreshOnly)&&(this.HTML+=d.refreshIcon(this.props.instant?"instant":"refresh-icon")),this.props.key==="matchmaker_regions"&&f.regionTimezones&&(this.props.cols=8,this.props.optDescriptions=U.MATCHMAKER_REGIONS.map(s=>(0,b.getTimezoneByRegionKey)("code",s))),"userscriptReference"in e&&e.userscriptReference.hasRan&&!e.instant&&e.type==="bool"&&e.value===!1&&(E(this,k,!0),this.props.desc=ee),e.type){case"bool":this.HTML+=`<span class="setting-title">${e.title}</span> 
 					<label class="switch">
-							<input class="s-update" type="checkbox" ${props.value ? "checked" : ""} ${__privateGet(this, _disabled) ? "disabled" : ""}/>
+							<input class="s-update" type="checkbox" ${e.value?"checked":""} ${R(this,k)?"disabled":""}/>
 							<div class="slider round"></div>
-					</label>`;
-        this.updateKey = "checked";
-        this.updateMethod = "onchange";
-        break;
-      case "text":
-        this.HTML += `<span class="setting-title">${props.title}</span>
+					</label>`,this.updateKey="checked",this.updateMethod="onchange";break;case"text":this.HTML+=`<span class="setting-title">${e.title}</span>
 					<span class="setting-input-wrapper">
-							<input type="text" class="rb-input s-update inputGrey2" name="${props.key}" autocomplete="off" value="${props.value}"/>
-					</span>`;
-        this.updateKey = "value";
-        this.updateMethod = "oninput";
-        break;
-      case "num":
-        this.HTML += `<span class="setting-title">${props.title}</span>
+							<input type="text" class="rb-input s-update inputGrey2" name="${e.key}" autocomplete="off" value="${e.value}"/>
+					</span>`,this.updateKey="value",this.updateMethod="oninput";break;case"num":this.HTML+=`<span class="setting-title">${e.title}</span>
 				<span class="setting-input-wrapper">
-					<input type="number" class="rb-input s-update sliderVal" name="${props.key}" 
-						autocomplete="off" value="${props.value}" 
-						min="${props.min}" max="${props.max}" step="${props?.step ?? 1}"
+					<div class="slidecontainer">
+						<input type="range" class="sliderM s-update-secondary" name="${e.key}"
+							value="${e.value}" min="${e.min}" max="${e.max}" step="${e?.step??1}"
+						/>
+					</div>
+					<input type="number" class="rb-input s-update sliderVal" name="${e.key}" 
+						autocomplete="off" value="${e.value}" min="${e.min}" max="${e.max}" step="${e?.step??1}"
 					/>
-				</span>`;
-        this.updateKey = "valueAsNumber";
-        this.updateMethod = "onchange";
-        break;
-      case "heading":
-        this.HTML = `<h1 class="setting-title">${props.title}</h1>`;
-        break;
-      case "sel":
-        this.HTML += `<span class="setting-title">${props.title}</span>
-          <select class="s-update inputGrey2">
-						${props.opts.map((opt) => `<option value ="${opt}">${opt}</option>`).join("")}
-					</select>`;
-        this.updateKey = "value";
-        this.updateMethod = "onchange";
-        break;
-      case "multisel": {
-        const hasValidDescriptions = (0, import_utils.hasOwn)(this.props, "optDescriptions") && this.props.opts.length === this.props.optDescriptions.length;
-        if ((0, import_utils.hasOwn)(this.props, "optDescriptions") && !hasValidDescriptions)
-          throw new Error(`Setting '${this.props.key}' declared 'optDescriptions', but a different amount than 'opts'!`);
-        this.HTML += `<span class="setting-title">${props.title}</span>
-					<div class="crankshaft-multisel-parent s-update" ${props?.cols ? `style="grid-template-columns:repeat(${props.cols}, 1fr)"` : ""}>
-						${props.opts.map((opt, i) => `<label class="hostOpt">
-							<span class="optName">${opt}</span>
-							${hasValidDescriptions ? `<span class="optDescription">${this.props.optDescriptions[i]}</span>` : ""}
-							<input type="checkbox" name="${opt}" ${props.value.includes(opt) ? "checked" : ""} />
+				</span>`,this.updateKey="valueAsNumber",this.updateMethod="onchange";break;case"heading":this.HTML=`<h1 class="setting-title">${e.title}</h1>`;break;case"sel":this.HTML+=`<span class="setting-title">${e.title}</span>
+          			<select class="s-update inputGrey2">
+						${e.opts.map(s=>`<option value="${s}">${s}</option>`).join("")}
+					</select>`,this.updateKey="value",this.updateMethod="onchange";break;case"multisel":{const s=(0,c.hasOwn)(this.props,"optDescriptions")&&this.props.opts.length===this.props.optDescriptions.length;if((0,c.hasOwn)(this.props,"optDescriptions")&&!s)throw new Error(`Setting '${this.props.key}' declared 'optDescriptions', but a different amount than 'opts'!`);this.HTML+=`<span class="setting-title">${e.title}</span>
+					<div class="crankshaft-multisel-parent s-update" ${e?.cols?`style="grid-template-columns:repeat(${e.cols}, 1fr)"`:""}>
+						${e.opts.map((n,r)=>`<label class="hostOpt">
+							<span class="optName">${n}</span>
+							${s?`<span class="optDescription">${this.props.optDescriptions[r]}</span>`:""}
+							<input type="checkbox" name="${n}" ${e.value.includes(n)?"checked":""} />
 							<div class="optCheck"></div>
 						</label>`).join("")}
-					</div>`;
-        this.updateKey = "value";
-        this.updateMethod = "onchange";
-        break;
-      }
-      default:
-        this.HTML = `<span class="setting-title">${props.title}</span><span>Unknown setting type</span>`;
-    }
-    if (Boolean(props.desc) && props.desc !== "")
-      this.HTML += `<div class="setting-desc-new">${props.desc}</div>`;
-  }
-  /**
-   * update the settings when you change something in the gui
-   * @param {{elem: HTMLElement, callback: 'normal'|Function}} elemAndCb
-   */
-  update({ elem, callback }) {
-    if (this.updateKey === "")
-      throw "Invalid update key";
-    const target = elem.querySelector(".s-update");
-    let dirtyValue = target[this.updateKey];
-    if (this.props.type === "multisel") {
-      dirtyValue = [...target.children].filter((child) => child.querySelector("input:checked")).map((child) => child.querySelector(".optName").textContent);
-    }
-    if (typeof dirtyValue === "number") {
-      const updateUI = () => {
-        target.value = dirtyValue.toString();
-      };
-      if (Number.isNaN(dirtyValue)) {
-        target.value = userPrefs[this.props.key].toString();
-        return;
-      }
-      if ((0, import_utils.hasOwn)(this.props, "min") && dirtyValue < this.props.min) {
-        dirtyValue = this.props.min;
-        updateUI();
-      }
-      if ((0, import_utils.hasOwn)(this.props, "max") && dirtyValue > this.props.max) {
-        dirtyValue = this.props.max;
-        updateUI();
-      }
-    }
-    const value = dirtyValue;
-    if (callback === "normal") {
-      import_electron.ipcRenderer.send("logMainConsole", `recieved an update for ${this.props.key}: ${value}`);
-      userPrefs[this.props.key] = value;
-      saveSettings();
-      if (this.props.key === "hideAds") {
-        const adsHidden = value === "hide" || value === "block";
-        (0, import_utils.toggleSettingCSS)(import_preload.styleSettingsCSS.hideAds, this.props.key, adsHidden);
-        (0, import_utils.classListSet)(document.getElementById("hiddenClasses"), adsHidden, "hiddenClasses-hideAds-bottomOffset");
-      }
-      if (typeof value === "boolean") {
-        if (this.props.key === "menuTimer")
-          (0, import_utils.toggleSettingCSS)(import_preload.styleSettingsCSS.menuTimer, this.props.key, value);
-        if (this.props.key === "quickClassPicker")
-          (0, import_utils.toggleSettingCSS)(import_preload.styleSettingsCSS.quickClassPicker, this.props.key, value);
-        if (this.props.key === "hideReCaptcha")
-          (0, import_utils.toggleSettingCSS)(import_preload.styleSettingsCSS.hideReCaptcha, this.props.key, value);
-      }
-    } else if (callback === "userscript") {
-      if (typeof value !== "boolean")
-        throw `Callback cannot be "userscript" for non-boolean values, like: ${value.toString()}`;
-      let refreshSettings = false;
-      if ("userscriptReference" in this.props) {
-        const userscript = this.props.userscriptReference;
-        if (value && (!userscript.hasRan || this.props.instant)) {
-          userscript.load();
-          if (!userscript.hasRan)
-            refreshSettings = true;
-          userscript.hasRan = true;
-        } else if (!value) {
-          if (this.props.instant && typeof userscript.unload === "function") {
-            userscript.unload();
-          } else {
-            elem.querySelector(".setting-desc-new").textContent = refreshToUnloadMessage;
-            target.setAttribute("disabled", "");
-            __privateSet(this, _disabled, true);
-          }
-        }
-        import_electron.ipcRenderer.send("logMainConsole", `userscript: recieved an update for ${userscript.name}: ${value}`);
-        import_userscripts.su.userscriptTracker[userscript.name] = value;
-      } else {
-        import_electron.ipcRenderer.send("logMainConsole", `userscript: recieved an update for ${this.props.title}: ${value}`);
-        import_userscripts.su.userscriptTracker[this.props.title] = value;
-      }
-      saveUserscriptTracker();
-      if (refreshSettings)
-        setTimeout(renderSettings, 400);
-    } else {
-      callback(value);
-    }
-    recalculateRefreshNeeded();
-    try {
-      refreshNotifElement.remove();
-    } catch (e) {
-    }
-    if (refreshNeeded > 0) {
-      refreshNotifElement = (0, import_utils.createElement)("div", {
-        class: ["crankshaft-holder-update", "refresh-popup"],
-        innerHTML: skeleton.refreshElem(refreshNeeded)
-      });
-      document.body.appendChild(refreshNotifElement);
-    }
-  }
-  /** this initializes the element and its eventlisteners.*/
-  get elem() {
-    if (__privateGet(this, _wrapper) !== false)
-      return __privateGet(this, _wrapper);
-    const wrapper = (0, import_utils.createElement)("div", {
-      class: ["setting", "settName", `safety-${this.props.safety}`, this.props.type],
-      id: `settingElem-${this.props.key}`,
-      innerHTML: this.HTML
-    });
-    if (this.type === "sel")
-      wrapper.querySelector("select").value = this.props.value;
-    if (typeof this.props.callback === "undefined")
-      this.props.callback = "normal";
-    wrapper[this.updateMethod] = () => {
-      this.update({ elem: wrapper, callback: this.props.callback });
-    };
-    __privateSet(this, _wrapper, wrapper);
-    return wrapper;
-  }
-}
-_wrapper = new WeakMap();
-_disabled = new WeakMap();
-const skeleton = {
-  /** make a setting cateogry */
-  category: (title, innerHTML, elemClass = "mainSettings") => `
-	<div class="setHed Crankshaft-setHed"><span class="material-icons plusOrMinus">keyboard_arrow_down</span> ${title}</div>
-	<div class="setBodH Crankshaft-setBodH ${elemClass}">
-			${innerHTML}
-	</div>`,
-  /** 
-   * make a setting with some text (notice) 
-   * @param desc description of the notice 
-   * @param opts desc => description, iconHTML => icon's html, generate through skeleton's *icon methods
-   */
-  notice: (notice, opts) => `
+					</div>`,this.updateKey="value",this.updateMethod="onchange";break}case"color":this.HTML+=`<span class="setting-title">${e.title}</span> 
+					<label class="setting-input-wrapper">
+							<input class="s-update" type="color" value="${e.value?e.value:""}" ${R(this,k)?"disabled":""}/>
+					</label>`,this.updateKey="value",this.updateMethod="onchange";break;default:this.HTML=`<span class="setting-title">${e.title}</span><span>Unknown setting type</span>`}e.desc&&e.desc!==""&&(this.HTML+=`<div class="setting-desc-new">${e.desc}</div>`)}update(e,s,n){if(this.updateKey==="")throw"Invalid update key";const r=e.querySelector(".s-update");let l=r[this.updateKey];if(this.props.type==="multisel"&&(l=[...r.children].filter(o=>o.querySelector("input:checked")).map(o=>o.querySelector(".optName").textContent)),this.props.type==="num"){l=n?n.target.valueAsNumber:r.valueAsNumber;const o=e.querySelector(".s-update-secondary"),a=p=>{r.value=p,o.value=p},u=()=>a(l.toString());if(Number.isNaN(l)){a(f[this.props.key].toString());return}(0,c.hasOwn)(this.props,"min")&&l<this.props.min&&(l=this.props.min,u()),(0,c.hasOwn)(this.props,"max")&&l>this.props.max&&(l=this.props.max,u()),u()}const i=l;if(s==="normal"){if(y.ipcRenderer.send("logMainConsole",`recieved an update for ${this.props.key}: ${i}`),f[this.props.key]=i,ue(),this.props.key==="hideAds"){const o=i==="hide"||i==="block";(0,c.toggleSettingCSS)(b.styleSettingsCSS.hideAds,this.props.key,o),document.getElementById("hiddenClasses").classList.toggle("hiddenClasses-hideAds-bottomOffset",o)}typeof i=="boolean"&&(this.props.key==="menuTimer"&&(0,c.toggleSettingCSS)(b.styleSettingsCSS.menuTimer,this.props.key,i),this.props.key==="quickClassPicker"&&(0,c.toggleSettingCSS)(b.styleSettingsCSS.quickClassPicker,this.props.key,i),this.props.key==="hideReCaptcha"&&(0,c.toggleSettingCSS)(b.styleSettingsCSS.hideReCaptcha,this.props.key,i))}else if(s==="userscript"){if(typeof i!="boolean")throw`Callback cannot be "userscript" for non-boolean values, like: ${i.toString()}`;let o=!1;if("userscriptReference"in this.props){const a=this.props.userscriptReference;o=!0,i&&(!a.hasRan||this.props.instant)?(a.load(),a.hasRan=!0):i||(this.props.instant&&typeof a.unload=="function"?a.unload():(e.querySelector(".setting-desc-new").textContent=ee,r.setAttribute("disabled",""),E(this,k,!0))),y.ipcRenderer.send("logMainConsole",`userscript: recieved an update for ${a.name}: ${i}`),g.su.userscriptTracker[a.name]=i}else y.ipcRenderer.send("logMainConsole",`userscript: recieved an update for ${this.props.title}: ${i}`),g.su.userscriptTracker[this.props.title]=i;ge(),o&&setTimeout(se,400)}else s(i);me();try{Q.remove()}catch{}M>0&&(Q=(0,c.createElement)("div",{class:["crankshaft-holder-update","refresh-popup"],innerHTML:d.refreshElem(M)}),document.body.appendChild(Q))}get elem(){if(R(this,v)!==!1)return R(this,v);const e=["setting","settName",`safety-${this.props.safety}`,this.type];this.props.button&&e.push("has-button");const s=(0,c.createElement)("div",{class:e,id:`settingElem-${this.props.key}`,innerHTML:this.HTML});if(this.props.button){const{icon:n,text:r,callback:l}=this.props.button;s.appendChild(d.settingButton(n,r,l,this.props.button.customTitle??void 0))}return this.type==="sel"&&(s.querySelector("select").value=String(this.props.value)),typeof this.props.callback>"u"&&(this.props.callback="normal"),s[this.updateMethod]=n=>{this.update(s,this.props.callback,n)},E(this,v,s),s}}v=new WeakMap,k=new WeakMap;const d={category:(t,e,s="mainSettings")=>`
+	<div class="setHed Crankshaft-setHed"><span class="material-icons plusOrMinus">keyboard_arrow_down</span> ${t}</div>
+	<div class="setBodH Crankshaft-setBodH ${s}">
+			${e}
+	</div>`,notice:(t,e)=>`
 	<div class="settName setting">
-		${opts?.iconHTML ?? false ? opts.iconHTML : ""}
-		<span class="setting-title crankshaft-gray">${notice}</span>
-		${opts?.desc ?? false ? `<div class="setting-desc-new">${opts.desc}</div>` : ""}
-	</div>`,
-  /** wrapped safety warning icon (color gets applied through css) */
-  safetyIcon: (safety) => `
-	<span class="setting-desc desc-icon" title="${safety}">
+		${e?.iconHTML??!1?e.iconHTML:""}
+		<span class="setting-title crankshaft-gray">${t}</span>
+		${e?.desc??!1?`<div class="setting-desc-new">${e.desc}</div>`:""}
+	</div>`,safetyIcon:t=>`
+	<span class="desc-icon" title="${t}">
 		<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24"><path d="M12 12.5ZM3.425 20.5Q2.9 20.5 2.65 20.05Q2.4 19.6 2.65 19.15L11.2 4.35Q11.475 3.9 12 3.9Q12.525 3.9 12.8 4.35L21.35 19.15Q21.6 19.6 21.35 20.05Q21.1 20.5 20.575 20.5ZM12 10.2Q11.675 10.2 11.463 10.412Q11.25 10.625 11.25 10.95V14.45Q11.25 14.75 11.463 14.975Q11.675 15.2 12 15.2Q12.325 15.2 12.538 14.975Q12.75 14.75 12.75 14.45V10.95Q12.75 10.625 12.538 10.412Q12.325 10.2 12 10.2ZM12 17.8Q12.35 17.8 12.575 17.575Q12.8 17.35 12.8 17Q12.8 16.65 12.575 16.425Q12.35 16.2 12 16.2Q11.65 16.2 11.425 16.425Q11.2 16.65 11.2 17Q11.2 17.35 11.425 17.575Q11.65 17.8 12 17.8ZM4.45 19H19.55L12 6Z"/></svg>
-	</span>`,
-  /** wrapped refresh icon (color gets applied through css) */
-  refreshIcon: (mode) => `
-	<span class="setting-desc desc-icon ${mode}" title="${mode === "instant" ? "Applies instantly! (No refresh of page required)" : "Refresh page to see changes"}">
+	</span>`,refreshIcon:t=>`
+	<span class="desc-icon ${t}" title="${t==="instant"?"Applies instantly! (No refresh of page required)":"Refresh page to see changes"}">
 		<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M12 6v1.79c0 .45.54.67.85.35l2.79-2.79c.2-.2.2-.51 0-.71l-2.79-2.79c-.31-.31-.85-.09-.85.36V4c-4.42 0-8 3.58-8 8 0 1.04.2 2.04.57 2.95.27.67 1.13.85 1.64.34.27-.27.38-.68.23-1.04C6.15 13.56 6 12.79 6 12c0-3.31 2.69-6 6-6zm5.79 2.71c-.27.27-.38.69-.23 1.04.28.7.44 1.46.44 2.25 0 3.31-2.69 6-6 6v-1.79c0-.45-.54-.67-.85-.35l-2.79 2.79c-.2.2-.2.51 0 .71l2.79 2.79c.31.31.85.09.85-.35V20c4.42 0 8-3.58 8-8 0-1.04-.2-2.04-.57-2.95-.27-.67-1.13-.85-1.64-.34z"/></svg>
-	</span>`,
-  /** make a settings category header element */
-  catHedElem: (title) => (0, import_utils.createElement)("div", {
-    class: "setHed Crankshaft-setHed".split(" "),
-    innerHTML: `<span class="material-icons plusOrMinus">keyboard_arrow_down</span> ${title}`
-  }),
-  /** make a settings category body element */
-  catBodElem: (elemClass, content) => (0, import_utils.createElement)("div", {
-    class: `setBodH Crankshaft-setBodH ${elemClass}`.split(" "),
-    innerHTML: content
-  }),
-  refreshElem: (level) => {
-    switch (level) {
-      case 2 /* reloadApp */:
-        return '<span class="restart-msg">Restart client fully to see changes</span>';
-      case 1 /* refresh */:
-        return `<span class="reload-msg">${skeleton.refreshIcon("refresh-icon")}Reload page with <code>F5</code> or <code>F6</code> to see changes</span>`;
-      case 0 /* notNeeded */:
-      default:
-        return "";
-    }
-  }
-};
-function renderSettings() {
-  const settHolder = document.getElementById("settHolder");
-  settHolder.textContent = "";
-  settHolder.classList.add("Crankshaft-settings");
-  settHolder.appendChild(skeleton.catHedElem(categoryNames[0].name));
-  settHolder.appendChild(skeleton.catBodElem(categoryNames[0].cat, skeleton.notice("These settings need a client restart to work.")));
-  const csSettings = new DocumentFragment();
-  const settings = transformMarrySettings(userPrefs, settingsDesc, "normal");
-  for (const setObj of settings) {
-    const setElem = new SettingElem(setObj);
-    const settElemMade = setElem.elem;
-    if ("cat" in setObj) {
-      const cat = categoryNames[setObj.cat];
-      if (csSettings.querySelector(`.${cat.cat}`) === null) {
-        csSettings.appendChild(skeleton.catHedElem(cat.name));
-        csSettings.appendChild(skeleton.catBodElem(cat.cat, "note" in cat ? skeleton.notice(cat.note) : ""));
-      }
-      csSettings.querySelector(`.${cat.cat}`).appendChild(settElemMade);
-    } else {
-      csSettings.querySelector(".setBodH.mainSettings").appendChild(settElemMade);
-    }
-  }
-  if (userPrefs.userscripts) {
-    csSettings.appendChild(skeleton.catHedElem("Userscripts"));
-    if (import_userscripts.su.userscripts.length > 0) {
-      csSettings.appendChild(skeleton.catBodElem("userscripts", skeleton.notice("NOTE: refresh page to see changes", { iconHTML: skeleton.refreshIcon("refresh-icon") })));
-    } else {
-      csSettings.appendChild(skeleton.catBodElem("userscripts", skeleton.notice(
-        "No userscripts...",
-        { desc: 'Go to the Crankshaft <a href="https://github.com/KraXen72/crankshaft#userscripts">README.md</a> to download some made by the client dev.' }
-      )));
-    }
-    const userscriptSettings = import_userscripts.su.userscripts.map((userscript) => {
-      const obj = {
-        key: userscript.name.slice(0, -3),
-        // remove .js
-        title: userscript.name,
-        value: import_userscripts.su.userscriptTracker[userscript.name],
-        type: "bool",
-        desc: userscript.fullpath,
-        safety: 0,
-        userscriptReference: userscript,
-        callback: "userscript"
-      };
-      if (userscript.meta) {
-        const thisMeta = userscript.meta;
-        Object.assign(obj, {
-          title: "name" in thisMeta && thisMeta.name ? thisMeta.name : userscript.name,
-          desc: `${"desc" in thisMeta && thisMeta.desc ? thisMeta.desc.slice(0, 60) : ""}
-						${"author" in thisMeta && thisMeta.author ? `&#8226; ${thisMeta.author}` : ""}
-						${"version" in thisMeta && thisMeta.version ? `&#8226; v${thisMeta.version}` : ""}
-						${"src" in thisMeta && thisMeta.src ? ` &#8226; <a target="_blank" href="${thisMeta.src}">source</a>` : ""}`
-        });
-      }
-      if (userscript.unload)
-        obj.instant = true;
-      return obj;
-    });
-    document.querySelector(".Crankshaft-settings").textContent = "";
-    document.querySelector(".Crankshaft-settings").append(csSettings);
-    for (const i of userscriptSettings) {
-      const userSet = new SettingElem(i);
-      document.querySelector(".Crankshaft-settings .setBodH.userscripts").appendChild(userSet.elem);
-    }
-  } else {
-    document.querySelector(".Crankshaft-settings").textContent = "";
-    document.querySelector(".Crankshaft-settings").append(csSettings);
-  }
-  function toggleCategory(me) {
-    const sibling = me.nextElementSibling;
-    sibling.classList.toggle("setting-category-collapsed");
-    const iconElem = me.querySelector(".material-icons");
-    if (iconElem.innerHTML.toString() === "keyboard_arrow_down")
-      iconElem.innerHTML = "keyboard_arrow_right";
-    else
-      iconElem.innerHTML = "keyboard_arrow_down";
-  }
-  const settHeaders = [...document.querySelectorAll(".Crankshaft-setHed")];
-  settHeaders.forEach((header) => {
-    const collapseCallback = () => {
-      toggleCategory(header);
-    };
-    try {
-      header.removeEventListener("click", collapseCallback);
-    } catch (e) {
-    }
-    header.addEventListener("click", collapseCallback);
-  });
-}
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  renderSettings
-});
+	</span>`,catHedElem:t=>(0,c.createElement)("div",{class:"setHed Crankshaft-setHed".split(" "),innerHTML:`<span class="material-icons plusOrMinus">keyboard_arrow_down</span> ${t}`}),catBodElem:(t,e)=>(0,c.createElement)("div",{class:`setBodH Crankshaft-setBodH ${t}`.split(" "),innerHTML:e}),refreshElem:t=>{switch(t){case 2:return'<span class="restart-msg">Restart client fully to see changes</span>';case 1:return`<span class="reload-msg">${d.refreshIcon("refresh-icon")}Reload page with <code>F5</code> or <code>F6</code> to see changes</span>`;case 0:default:return""}},settingButton:(t,e,s,n)=>{const r=(0,c.createElement)("div",{innerHTML:`<span class="material-icons">${t}</span> ${e}`,class:["settingsBtn"],title:n??e});return r.addEventListener("click",s),r}};function se(){const t=document.getElementById("settHolder");t.textContent="",t.classList.add("Crankshaft-settings"),t.appendChild(d.catHedElem(j[0].name)),t.appendChild(d.catBodElem(j[0].cat,d.notice("These settings need a client restart to work.")));const e=new DocumentFragment,s=de(f,L,"normal");for(const i of s){const a=new G(i).elem;if("cat"in i){const u=j[i.cat];e.querySelector(`.${u.cat}`)===null&&(e.appendChild(d.catHedElem(u.name)),e.appendChild(d.catBodElem(u.cat,"note"in u?d.notice(u.note):""))),e.querySelector(`.${u.cat}`).appendChild(a)}else e.querySelector(".setBodH.mainSettings").appendChild(a)}if(f.userscripts){e.appendChild(d.catHedElem("Userscripts")),g.su.userscripts.length>0?e.appendChild(d.catBodElem("userscripts",d.notice("NOTE: refresh page to see changes",{iconHTML:d.refreshIcon("refresh-icon")}))):e.appendChild(d.catBodElem("userscripts",d.notice("No userscripts...",{desc:`Go to the Crankshaft <a href="https://github.com/${c.repoID}#userscripts">README.md</a> to download some made by the client dev.`})));const i=[],o=g.su.userscripts.map(a=>{const u={key:a.name.replace(/.js$/,""),title:a.name,value:g.su.userscriptTracker[a.name],type:"bool",desc:a.fullpath,safety:0,userscriptReference:a,callback:"userscript"};if(a.meta){const p=a.meta,N="author"in p&&p.author?`${p.author}`:!1,O="name"in p&&p.name?p.name:a.name,z="settings"in a&&Object.keys(a.settings).length>0&&g.su.userscriptTracker[a.name];if(Object.assign(u,{title:O,desc:`${"desc"in p&&p.desc?p.desc.slice(0,60):""}
+						${N?`&#8226; ${N}`:""}
+						${"version"in p&&p.version?`&#8226; v${p.version}`:""}
+						${"src"in p&&p.src?` &#8226; <a target="_blank" href="${p.src}">source</a>`:""}
+						${z?`&#8226; Uses ${Object.keys(a.settings).length} Custom Settings`:""}`}),z){const K=[],C=new DocumentFragment,S=`${O}by${N}`.replaceAll(" ","").toLowerCase().replaceAll(/[^a-z0-9]/g,"");C.appendChild(d.catHedElem(` ${O} <span class='settings-Userscript-Author'>by ${N}</span>`)),C.appendChild(d.catBodElem(S,""));const x={...a.settings},$=a?.name?.replace(/.js$/,"")??S;try{m[$]={},he($,x),Object.keys(x).forEach(h=>{const A={...x[h]};m[$][h]===void 0&&(m[$][h]=A.value);let J=(0,D.customSettingIsMalformed)(A);if(J===!1){const w={key:h??"UNDEFINED CUSTOM SETTINGS OPTION",title:"Unset Custom Setting Title: {title}",value:!1,type:"bool",safety:0,callback:function(){}};Object.assign(w,A,{value:m[$][h],callback:function(Z){m[this.prefsKey][this.settingKey]=Z,te(this.prefsKey),this.changed(Z)}.bind({settingKey:h,prefsKey:$,changed:A.changed})});const I=new G(w);C.querySelector(`.${S}`).appendChild(I.elem)}else{K.push(h);const w=(0,c.createElement)("div",{class:["setting","settName","safety-0","brokenCustomUserscriptSettingWrapper"],innerHTML:""}),I=(0,c.createElement)("div",{class:["crankshaft-button-holder","setting","settName"],innerHTML:`<div class="setting-title brokenCustomUserscriptSettingTitle">Malformed Setting: ${h}</div>
+									<div class='setting-desc-new brokenCustomUserscriptSettingDesc'>Userscript Setting Validation error: ${J}</div>`});w.appendChild(I),C.querySelector(`.${S}`).appendChild(w)}})}catch(h){b.strippedConsole.error(`Error creating custom settings for userscript: ${a.name}`,h)}const W=(0,c.createElement)("div",{class:["crankshaft-button-holder","setting","settName"],innerHTML:`<span class="buttons-title">Reset ${O} Settings</span>`});W.appendChild(d.settingButton("refresh","Reset Defaults",h=>{fe(a.name.replace(/.js$/,"")??S,x,S,K)})),C.querySelector(`.${S}`).appendChild(W),i.push(C)}}return a.unload?u.instant=!0:u.instant=!1,u});i.forEach(a=>{e.appendChild(a)}),document.querySelector(".Crankshaft-settings").textContent="",document.querySelector(".Crankshaft-settings").append(e);for(const a of o){const u=new G(a);document.querySelector(".Crankshaft-settings .setBodH.userscripts").appendChild(u.elem)}}else document.querySelector(".Crankshaft-settings").textContent="",document.querySelector(".Crankshaft-settings").append(e);function n(i){i.nextElementSibling.classList.toggle("setting-category-collapsed");const a=i.querySelector(".material-icons");a.innerHTML.toString()==="keyboard_arrow_down"?a.innerHTML="keyboard_arrow_right":a.innerHTML="keyboard_arrow_down"}[...document.querySelectorAll(".Crankshaft-setHed")].forEach(i=>{const o=()=>{n(i)};try{i.removeEventListener("click",o)}catch{}i.addEventListener("click",o)});const l=(0,c.createElement)("div",{class:["crankshaft-button-holder","setting","settName"],innerHTML:'<span class="buttons-title">Quick open:</span>'});l.appendChild(d.settingButton("file_open","Settings file",i=>P(i,F))),l.appendChild(d.settingButton("folder","Crankshaft folder",i=>P(i,H.configPath))),document.querySelector(".setBodH.Crankshaft-setBodH").prepend(l)}0&&(module.exports={renderSettings});
