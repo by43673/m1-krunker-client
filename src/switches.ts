@@ -41,7 +41,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
