@@ -1,4 +1,6 @@
 # This is just crankshaft fork with slight modifications
+# Important
+if you are on mac like me, please turn on low latency and experimental flags!(they are diff from the original ones in crankshaft)
 
 # Important(Yes, again)
 Use third party software such as usb overdrive or logitech ghub to keybind to fix aim freeze. No flags atm to fix this(impossible to fix with flags)
