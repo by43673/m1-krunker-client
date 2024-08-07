@@ -20,6 +20,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
+		app.commandLine.appendSwitch('enable-javascript-harmony');
 		app.commandLine.appendSwitch('enable-future-v8-vm-features');
 		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
@@ -50,7 +51,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
-		app.commandLine.appendSwitch('enable-gpu-rasterization');
+		app.commandLine.appendSwitch('enable-oop-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy'); 
 		console.log('GPU rasterization active');
 	}
