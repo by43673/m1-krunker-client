@@ -1,4 +1,17 @@
-﻿import { join as pathJoin, resolve as pathResolve } from 'path';
+// Set the environment variable to mimic Windows 10 arm64
+process.env.OS = 'Windows_NT';
+
+// Override the process.platform property to return 'win32'
+Object.defineProperty(process, 'platform', {
+    value: 'win32'
+});
+
+// Override the process.arch property to return 'arm64'
+Object.defineProperty(process, 'arch', {
+    value: 'arm64'
+});
+
+import { join as pathJoin, resolve as pathResolve } from 'path';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'fs';
 import { moveFolderSync } from './utils_node';
 import { BrowserWindow, Menu, MenuItem, MenuItemConstructorOptions, app, clipboard, dialog, ipcMain, protocol, shell, screen, BrowserWindowConstructorOptions } from 'electron';
@@ -43,7 +56,6 @@ Settings, userscripts and swapper have been moved to '${userData}'.\n
 You can verify that they are indeed there, and then safely delete this directory.`);
 }
 
-if (existsSync(docsPath)) migrateSettings();
 
 const swapperPath = pathJoin(configPath, 'swapper');
 const settingsPath = pathJoin(configPath, 'settings.json');
@@ -52,7 +64,7 @@ const filtersPath = pathJoin(configPath, 'filters.txt');
 const userscriptsPath = pathJoin(configPath, 'scripts');
 const userscriptTrackerPath = pathJoin(userscriptsPath, 'tracker.json');
 
-app.userAgentFallback = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Electron/10.4.7 Safari/537.36';
+app.userAgentFallback = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.0 Electron/12.0.0-nightly.20201116 Safari/537.36';
 
 const settingsSkeleton = {
 	fpsUncap: true,
