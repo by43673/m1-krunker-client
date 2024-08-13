@@ -43,6 +43,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
+		app.commandLine.appendSwitch('enable-features', 'CanvasOopRasterization');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
