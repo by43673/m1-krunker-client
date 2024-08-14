@@ -1,16 +1,3 @@
-// Set the environment variable to mimic Windows 10 arm64
-process.env.OS = 'Windows_NT';
-
-// Override the process.platform property to return 'win32'
-Object.defineProperty(process, 'platform', {
-    value: 'win32'
-});
-
-// Override the process.arch property to return 'arm64'
-Object.defineProperty(process, 'arch', {
-    value: 'arm64'
-});
-
 import { join as pathJoin, resolve as pathResolve } from 'path';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'fs';
 import { moveFolderSync } from './utils_node';
