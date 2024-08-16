@@ -10,7 +10,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
-		app.commandLine.appendSwitch('enable-webgl'); // might be useless since this is default but ensure
 		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
