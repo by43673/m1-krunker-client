@@ -1,31 +1,19 @@
-import { app } from 'electron';
+ import { app } from 'electron';
 
 /// <reference path="global.d.ts" />
 
 /** applies command line switches to the app based on the passed userprefs */
 export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_removeUselessFeatures) {
-		app.commandLine.appendSwitch('disable-breakpad');
-		app.commandLine.appendSwitch('disable-print-preview');
-		app.commandLine.appendSwitch('disable-metrics-repo');
-		app.commandLine.appendSwitch('disable-metrics');
 		app.commandLine.appendSwitch('disable-2d-canvas-clip-aa');
-		app.commandLine.appendSwitch('disable-bundled-ppapi-flash');
-		app.commandLine.appendSwitch('disable-logging');
-		app.commandLine.appendSwitch('disable-hang-monitor');
-		app.commandLine.appendSwitch('disable-component-update');
-
-		if (process.platform === 'darwin') app.commandLine.appendSwitch('disable-dev-shm-usage');
+		app.commandLine.appendSwitch('disable-dev-shm-usage');
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
-		app.commandLine.appendSwitch('enable-javascript-harmony');
-		app.commandLine.appendSwitch('enable-future-v8-vm-features');
 		app.commandLine.appendSwitch('enable-webgl'); // might be useless since this is default but ensure
 		app.commandLine.appendSwitch('enable-webgl2-compute-context');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		console.log('Applied helpful flags');
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
@@ -43,13 +31,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
+		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy');
-		app.commandLine.appendSwitch('enable-oop-rasterization');
+		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM86');
+		app.commandLine.appendSwitch('enable-oop-rasterization');		
 		console.log('GPU rasterization active');
 	}
 
@@ -58,6 +47,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		console.log('Removed FPS Cap');
 	}
 
