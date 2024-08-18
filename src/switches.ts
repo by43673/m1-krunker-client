@@ -24,19 +24,23 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied flags to increase limits');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
+		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
+		app.commandLine.appendSwitch('use-gl', 'angle');
+		app.commandLine.appendSwitch('use-angle', 'gl');
 		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
+		app.commandLine.appendSwitch('enable-features', 'CanvasOopRasterization');	
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
 		app.commandLine.appendSwitch('enable-gpu-rasterization');
 		app.commandLine.appendSwitch('disable-zero-copy');
 		app.commandLine.appendSwitch('enable-features', 'UnexpireFlagsM86');
-		app.commandLine.appendSwitch('enable-oop-rasterization');		
+		app.commandLine.appendSwitch('enable-oop-rasterization');
 		console.log('GPU rasterization active');
 	}
 
@@ -45,8 +49,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-		app.commandLine.appendSwitch('use-gl', 'angle');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
 		console.log('Removed FPS Cap');
 	}
 
