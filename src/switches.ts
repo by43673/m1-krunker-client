@@ -6,7 +6,6 @@
 export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_removeUselessFeatures) {
 		app.commandLine.appendSwitch('disable-2d-canvas-clip-aa');
-		app.commandLine.appendSwitch('disable-dev-shm-usage');
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
@@ -26,12 +25,14 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
+		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
+		app.commandLine.appendSwitch('use-gl', 'angle');
+		app.commandLine.appendSwitch('use-angle', 'default');
+		
+		
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
