@@ -24,8 +24,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
-		app.commandLine.appendSwitch('enable-quic'); 
-		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');				
+		app.commandLine.appendSwitch('enable-quic'); 				
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
