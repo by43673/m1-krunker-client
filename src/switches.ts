@@ -23,12 +23,12 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
 		app.commandLine.appendSwitch('enable-quic');
-		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds'); 
-		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 				
+		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 
+		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization');				
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization');
+		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds'); 
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
