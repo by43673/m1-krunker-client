@@ -18,19 +18,17 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('renderer-process-limit', '100');
 		app.commandLine.appendSwitch('max-active-webgl-contexts', '100');
 		app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100');
-		app.commandLine.appendSwitch('ignore-gpu-blocklist');
-
 		console.log('Applied flags to increase limits');
 	}
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
-		app.commandLine.appendSwitch('enable-quic'); 				
+		app.commandLine.appendSwitch('enable-quic');
+		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds'); 
+		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 				
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
-		app.commandLine.appendSwitch('use-gl', 'angle');		
+		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -45,8 +43,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('disable-features', 'DefaultOopRasterization');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
+		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
+		app.commandLine.appendSwitch('use-gl', 'angle');	
 		console.log('Removed FPS Cap');
 	}
 	
