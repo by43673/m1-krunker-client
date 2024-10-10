@@ -43,8 +43,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
-		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');	
+		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');	
 		console.log('Removed FPS Cap');
 	}
 
