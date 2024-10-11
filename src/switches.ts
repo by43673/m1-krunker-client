@@ -32,12 +32,17 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
 		app.commandLine.appendSwitch('enable-quic');
-		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 			
+		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 		
+		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
-		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
+		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'GpuProcessHighPriorityWin'); 	
+		app.commandLine.appendSwitch('use-angle', 'gl');	
+		app.commandLine.appendSwitch('use-gl', 'angle');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
