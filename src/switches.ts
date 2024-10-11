@@ -5,11 +5,20 @@ import { app } from 'electron';
 /** applies command line switches to the app based on the passed userprefs */
 export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.safeFlags_removeUselessFeatures) {
+		app.commandLine.appendSwitch('disable-breakpad');
+		app.commandLine.appendSwitch('disable-print-preview');
+		app.commandLine.appendSwitch('disable-metrics-repo');
+		app.commandLine.appendSwitch('disable-metrics');
 		app.commandLine.appendSwitch('disable-2d-canvas-clip-aa');
+		app.commandLine.appendSwitch('disable-bundled-ppapi-flash');
+		app.commandLine.appendSwitch('disable-logging');
+		app.commandLine.appendSwitch('disable-hang-monitor');
+		app.commandLine.appendSwitch('disable-component-update');
 		console.log('Removed useless features');
 	}
 	if (userPrefs.safeFlags_helpfulFlags) {
 		app.commandLine.appendSwitch('enable-webgl2-compute-context');
+		app.commandLine.appendSwitch('enable-future-v8-vm-features');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
 		console.log('Applied helpful flags');
@@ -23,11 +32,13 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_lowLatency) {
 		app.commandLine.appendSwitch('enable-highres-timer');
 		app.commandLine.appendSwitch('enable-quic');
-		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 				
+		app.commandLine.appendSwitch('ignore-gpu-blocklist');
+		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 			
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds'); 
+		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');
+		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -43,7 +54,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
-		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');	
 		console.log('Removed FPS Cap');
 	}
 
