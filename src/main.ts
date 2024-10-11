@@ -1,3 +1,20 @@
+// Set the environment variable to mimic Windows 10 x64
+process.env.OS = 'Windows_NT';
+
+// Override the process.platform property to return 'win32'
+Object.defineProperty(process, 'platform', {
+    value: 'win32',
+    writable: false,
+    configurable: true
+});
+
+// Override the process.arch property to return 'x64'
+Object.defineProperty(process, 'arch', {
+    value: 'x64',
+    writable: false,
+    configurable: true
+});
+
 import { join as pathJoin, resolve as pathResolve } from 'path';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'fs';
 import { moveFolderSync } from './utils_node';
@@ -51,7 +68,7 @@ const filtersPath = pathJoin(configPath, 'filters.txt');
 const userscriptsPath = pathJoin(configPath, 'scripts');
 const userscriptTrackerPath = pathJoin(userscriptsPath, 'tracker.json');
 
-app.userAgentFallback = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.0 Electron/12.0.0-nightly.20201116 Safari/537.36';
+app.userAgentFallback = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Electron/10.4.7 Safari/537.36';
 
 const settingsSkeleton = {
 	fpsUncap: true,
@@ -288,6 +305,10 @@ app.on('ready', () => {
 	mainWindow.on('ready-to-show', () => {
 		if (userPrefs.fullscreen === 'maximized' && !mainWindow.isMaximized()) mainWindow.maximize();
 		if (!mainWindow.isVisible()) mainWindow.show();
+		
+		if (userPrefs.fullscreen === 'fullscreen') {
+        	mainWindow.setFullScreen(true);
+    	      }
 
 		if (mainWindow.webContents.getURL().endsWith('dummy.html')) { mainWindow.loadURL('https://krunker.io'); return; }
 
