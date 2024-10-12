@@ -39,10 +39,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
 		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
-		app.commandLine.appendSwitch('use-angle', 'gl');	
+		app.commandLine.appendSwitch('use-angle', 'default');	
 		app.commandLine.appendSwitch('use-gl', 'angle');
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');		
+		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');	
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
