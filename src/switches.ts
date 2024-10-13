@@ -33,16 +33,12 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-highres-timer');
 		app.commandLine.appendSwitch('enable-quic');
 		app.commandLine.appendSwitch('ignore-gpu-blocklist'); 		
-		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
-		app.commandLine.appendSwitch('use-angle', 'default');	
+		app.commandLine.appendSwitch('enable-features', 'DefaultPassthroughCommandDecoder');	
 		app.commandLine.appendSwitch('use-gl', 'angle');
-		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');	
+		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -59,6 +55,20 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
 		console.log('Removed FPS Cap');
+	}
+
+	if (userPrefs['angle-backend'] !== 'default') {
+		if (userPrefs['angle-backend'] === 'vulkan') {
+			app.commandLine.appendSwitch('use-angle', 'vulkan');
+			app.commandLine.appendSwitch('use-vulkan');
+			app.commandLine.appendSwitch('--enable-features=Vulkan');
+
+			console.log('VULKAN INITIALIZED');
+		} else {
+			app.commandLine.appendSwitch('use-angle', userPrefs['angle-backend'] as string);
+
+			console.log(`Using Angle: ${userPrefs['angle-backend']}`);
+		}
 	}
 
 	if (userPrefs.inProcessGPU) {
