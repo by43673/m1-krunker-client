@@ -1,4 +1,4 @@
-﻿import { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join as pathJoin, resolve as pathResolve } from 'path';
 import { ipcRenderer } from 'electron';
 import { fetchGame } from './matchmaker';
@@ -15,6 +15,22 @@ dayjs.extend(utc);
 
 // get rid of client unsupported message 
 window.OffCliV = true;
+
+window.addEventListener('mousedown', (event) => {
+    // Do something with mousedown
+    console.log('Mouse Down at:', event.clientX, event.clientY); // Remove if you don't want logging
+});
+
+window.addEventListener('mouseup', (event) => {
+    // Do something with mouseup
+    console.log('Mouse Up at:', event.clientX, event.clientY); // Remove if you don't want logging
+});
+
+window.addEventListener('mousemove', (event) => {
+    // Handle mouse move
+    console.log('Mouse moved to:', event.clientX, event.clientY); // Remove if you don't want logging
+});
+
 
 // save some console methods from krunker
 export const strippedConsole = {
