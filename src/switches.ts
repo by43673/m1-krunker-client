@@ -42,7 +42,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('use-direct-composition');
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'GpuProcessHighPriorityWin');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -61,7 +60,6 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');	
 		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');	
 		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
-		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds'); 
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
 		console.log('Removed FPS Cap');
 	}
