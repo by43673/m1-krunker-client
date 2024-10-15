@@ -38,10 +38,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('enable-direct-composition-layers');
-		app.commandLine.appendSwitch('use-direct-composition');
 		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -61,7 +60,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
 		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		app.commandLine.appendSwitch('enable-features', 'MainLatencyRecovery'); 
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
+		app.commandLine.appendSwitch('enable-direct-composition-layers');
+		app.commandLine.appendSwitch('use-direct-composition');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+		app.commandLine.appendSwitch('disable-features', 'UserInteractiveCompositingMac');
 		console.log('Removed FPS Cap');
 	}
 
