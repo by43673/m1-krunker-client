@@ -58,8 +58,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
 		app.commandLine.appendSwitch('use-gl', 'angle');
 		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');	
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');	
+		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
 		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
+		app.commandLine.appendSwitch('enable-features', 'MainLatencyRecovery'); 
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');	
 		console.log('Removed FPS Cap');
 	}
