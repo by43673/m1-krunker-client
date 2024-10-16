@@ -49,7 +49,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 	}
 	if (userPrefs.experimentalFlags_experimental) {
 		app.commandLine.appendSwitch('use-direct-composition');
-		app.commandLine.appendSwitch('enable-direct-composition-layers');
+		app.commandLine.appendSwitch('enable-features', 'DirectCompositionOverlays'); 
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
