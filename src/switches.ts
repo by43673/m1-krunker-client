@@ -21,6 +21,16 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-future-v8-vm-features');
 		app.commandLine.appendSwitch('disable-background-timer-throttling');
 		app.commandLine.appendSwitch('disable-renderer-backgrounding');
+		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+		app.commandLine.appendSwitch('disable-features', 'UserInteractiveCompositingMac');
+		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
+		app.commandLine.appendSwitch('use-gl', 'angle');
+		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');	
+		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
+		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		console.log('Applied helpful flags');
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
@@ -38,8 +48,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('enable-direct-composition-layers');
 		app.commandLine.appendSwitch('use-direct-composition');
+		app.commandLine.appendSwitch('enable-direct-composition-layers');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -53,17 +63,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('disable-frame-rate-limit');
 		app.commandLine.appendSwitch('disable-gpu-vsync');
 		app.commandLine.appendSwitch('max-gum-fps', '9999');
-		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('use-gl', 'angle');
-		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');	
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
-		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		app.commandLine.appendSwitch('enable-features', 'MainLatencyRecovery'); 
-		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-		app.commandLine.appendSwitch('disable-features', 'UserInteractiveCompositingMac');
+		
 		console.log('Removed FPS Cap');
 	}
 
