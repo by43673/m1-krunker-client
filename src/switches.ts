@@ -38,9 +38,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		console.log('Applied latency-reducing flags');
 	}
 	if (userPrefs.experimentalFlags_experimental) {
-		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
-		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-direct-composition-layers');
+		app.commandLine.appendSwitch('use-direct-composition');
 		console.log('Enabled Experiments');
 	}
 	if (userPrefs.safeFlags_gpuRasterizing) {
@@ -60,8 +59,9 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
 		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		app.commandLine.appendSwitch('enable-features', 'MainLatencyRecovery'); 
-		app.commandLine.appendSwitch('enable-direct-composition-layers');
-		app.commandLine.appendSwitch('use-direct-composition');
+		app.commandLine.appendSwitch('enable-features', 'BlinkCompositorUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'GpuUseDisplayThreadPriority');
+		app.commandLine.appendSwitch('enable-features', 'BrowserUseDisplayThreadPriority');
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		app.commandLine.appendSwitch('disable-features', 'UserInteractiveCompositingMac');
 		console.log('Removed FPS Cap');
@@ -69,11 +69,8 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 
 	if (userPrefs['angle-backend'] !== 'default') {
 		if (userPrefs['angle-backend'] === 'vulkan') {
-			app.commandLine.appendSwitch('use-angle', 'vulkan');
-			app.commandLine.appendSwitch('use-vulkan');
-			app.commandLine.appendSwitch('--enable-features=Vulkan');
-
-			console.log('VULKAN INITIALIZED');
+			app.commandLine.appendSwitch('use-angle', 'metal');
+			console.log('Metal INITIALIZED');
 		} else {
 			app.commandLine.appendSwitch('use-angle', userPrefs['angle-backend'] as string);
 
