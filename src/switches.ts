@@ -32,8 +32,10 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
 		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		app.commandLine.appendSwitch('disable-features', 'TextureLayerSkipWaitForActivation'); 
-		app.commandLine.appendSwitch('use-core-animation'); 
-		app.commandLine.appendSwitch('disable-gpu-driver-bug-workarounds');
+		app.commandLine.appendSwitch('enable-features', 'MainLatencyRecovery');
+		app.commandLine.appendSwitch('enable-features', 'ImplLatencyRecovery');
+		app.commandLine.appendSwitch('use-direct-composition');
+		app.commandLine.appendSwitch('enable-features', 'DirectCompositionOverlays');
 		console.log('Applied helpful flags');
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
