@@ -27,15 +27,7 @@ export function applyCommandLineSwitches(userPrefs: UserPrefs) {
 		app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 		app.commandLine.appendSwitch('disable-features', 'UserInteractiveCompositingMac');
 		app.commandLine.appendSwitch('disable-features', 'UsePreferredIntervalForVideo');
-		app.commandLine.appendSwitch('use-gl', 'angle');
-		app.commandLine.appendSwitch('use-cmd-decoder', 'passthrough');	
-		app.commandLine.appendSwitch('enable-passthrough-raster-decoder');
-		app.commandLine.appendSwitch('disable-features', 'DefaultEnableOopRasterization'); 
 		app.commandLine.appendSwitch('disable-features', 'TextureLayerSkipWaitForActivation'); 
-		app.commandLine.appendSwitch('enable-features', 'MainLatencyRecovery');
-		app.commandLine.appendSwitch('enable-features', 'ImplLatencyRecovery');
-		app.commandLine.appendSwitch('use-direct-composition');
-		app.commandLine.appendSwitch('enable-features', 'DirectCompositionOverlays');
 		console.log('Applied helpful flags');
 	}
 	if (userPrefs.experimentalFlags_increaseLimits) {
